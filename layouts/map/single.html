@@ -1,5 +1,43 @@
 {{ define "main" }}
-<main class="min-h-[60vh] flex items-center justify-center animate-fade-in">
-  <p class="text-muted-foreground">Map — coming soon</p>
-</main>
+{{ $locations := .Params.locations | default slice }}
+{{ $cities := slice }}
+{{ range $locations }}{{ if .city }}{{ $cities = $cities | append .city }}{{ end }}{{ end }}
+{{ $locCount := len $locations }}
+{{ $cityCount := len ($cities | uniq) }}
+
+<div class="py-16 space-y-12 animate-fade-in">
+  <!-- Header -->
+  <section class="space-y-3">
+    <h1 class="text-3xl font-bold tracking-tight text-foreground">
+      {{ .Title }}
+    </h1>
+    <p class="text-muted-foreground">{{ .Params.description }}</p>
+    {{ with .Params.intro }}
+    <p class="text-sm text-muted-foreground italic leading-relaxed">{{ . }}</p>
+    {{ end }}
+    {{ if gt $locCount 0 }}
+    <p class="text-xs text-muted-foreground">
+      {{ $locCount }} {{ if eq $locCount 1 }}place{{ else }}places{{ end }}
+      {{ if gt $cityCount 0 }}<span class="mx-1 opacity-50">·</span>{{ $cityCount }} {{ if eq $cityCount 1 }}city{{ else }}cities{{ end }}{{ end }}
+    </p>
+    {{ end }}
+  </section>
+
+  {{ partial "map/map.html" . }}
+
+  <!-- Location Card Grid -->
+  {{ if gt $locCount 0 }}
+  <section class="space-y-6">
+    <h2 class="flex items-center gap-2 text-lg font-semibold text-foreground">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      All Places
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {{ range $locations }}
+        {{ partial "map/location-card.html" . }}
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+</div>
 {{ end }}

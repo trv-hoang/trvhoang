@@ -1,0 +1,224 @@
+<!-- Leaflet CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+
+{{ $locations := .Params.locations | default slice }}
+{{ $totalCount := len $locations }}
+{{ $foodCount := 0 }}
+{{ $drinkCount := 0 }}
+{{ range $locations }}
+  {{ if eq .category "food" }}{{ $foodCount = add $foodCount 1 }}{{ end }}
+  {{ if eq .category "drink" }}{{ $drinkCount = add $drinkCount 1 }}{{ end }}
+{{ end }}
+
+<div id="map-component" class="animate-fade-in flex flex-col lg:flex-row gap-8">
+  <!-- Sidebar -->
+  <aside class="w-full lg:w-48 flex-shrink-0 flex flex-col gap-8">
+    <!-- Category Filter -->
+    <div class="space-y-4">
+      <h3
+        class="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1"
+      >
+        By Category
+      </h3>
+      <div class="flex flex-wrap lg:flex-col gap-2">
+        <button
+          data-filter-type="category"
+          data-filter-value="all"
+          class="map-filter-btn active-filter px-4 py-2 text-sm font-medium rounded-xl border border-border/60 hover:border-amber-500/50 hover:bg-amber-500/5 transition-all flex items-center gap-2"
+        >
+          <span class="w-2 h-2 rounded-full bg-foreground"></span>
+          All Places
+          <span class="ml-auto text-[10px] bg-muted/60 text-muted-foreground rounded-md px-1.5 py-0.5">{{ $totalCount }}</span>
+        </button>
+        <button
+          data-filter-type="category"
+          data-filter-value="food"
+          class="map-filter-btn px-4 py-2 text-sm font-medium rounded-xl border border-border/60 hover:border-amber-400/50 hover:bg-amber-400/5 transition-all flex items-center gap-2"
+        >
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          Food
+          <span class="ml-auto text-[10px] bg-muted/60 text-muted-foreground rounded-md px-1.5 py-0.5">{{ $foodCount }}</span>
+        </button>
+        <button
+          data-filter-type="category"
+          data-filter-value="drink"
+          class="map-filter-btn px-4 py-2 text-sm font-medium rounded-xl border border-border/60 hover:border-blue-400/50 hover:bg-blue-400/5 transition-all flex items-center gap-2"
+        >
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          Drink
+          <span class="ml-auto text-[10px] bg-muted/60 text-muted-foreground rounded-md px-1.5 py-0.5">{{ $drinkCount }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- City Filter -->
+    <div class="space-y-4 pt-4 border-t border-border/40">
+      <h3
+        class="text-xs font-bold text-muted-foreground uppercase tracking-widest pl-1"
+      >
+        By City
+      </h3>
+      <div class="flex flex-wrap lg:flex-col gap-2">
+        <button
+          data-filter-type="city"
+          data-filter-value="all"
+          class="map-filter-btn active-filter px-4 py-2 text-sm font-medium rounded-xl border border-border/60 hover:border-amber-500/50 hover:bg-amber-500/5 transition-all flex items-center gap-2"
+        >
+          <span class="w-2 h-2 rounded-full bg-foreground"></span>
+          All Cities
+          <span class="ml-auto text-[10px] bg-muted/60 text-muted-foreground rounded-md px-1.5 py-0.5">{{ $totalCount }}</span>
+        </button>
+        {{ $cities := slice }}
+        {{ range $locations }}{{ if .city }}{{ $cities = $cities | append .city }}{{ end }}{{ end }}
+        {{ range ($cities | uniq) }}
+        {{ $cityName := . }}
+        {{ $cityCount := 0 }}
+        {{ range $locations }}{{ if eq .city $cityName }}{{ $cityCount = add $cityCount 1 }}{{ end }}{{ end }}
+        <button
+          data-filter-type="city"
+          data-filter-value="{{ $cityName }}"
+          class="map-filter-btn px-4 py-2 text-sm font-medium rounded-xl border border-border/60 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all flex items-center gap-2 text-left"
+        >
+          {{ $cityName }}
+          <span class="ml-auto text-[10px] bg-muted/60 text-muted-foreground rounded-md px-1.5 py-0.5">{{ $cityCount }}</span>
+        </button>
+        {{ end }}
+      </div>
+    </div>
+  </aside>
+
+  <!-- Map Container -->
+  <div class="flex-grow">
+    <div id="map" class="overflow-hidden relative group rounded-2xl"></div>
+  </div>
+
+</div>
+
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const locations = {{ .Params.locations | jsonify | safeJS }};
+      if (!locations || !document.getElementById('map')) return;
+
+      const map = L.map('map', {
+          zoomControl: false,
+          attributionControl: true
+      }).setView([16.047079, 108.206230], 6);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
+      }).addTo(map);
+
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+      setTimeout(() => { map.invalidateSize(); }, 100);
+
+      function getMarkerIcon(category) {
+          const color = category === 'drink' ? '#3b82f6' : '#f59e0b';
+          const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36"><path d="M14 0C6.268 0 0 6.268 0 14c0 9.333 14 22 14 22S28 23.333 28 14C28 6.268 21.732 0 14 0z" fill="${color}"/><circle cx="14" cy="14" r="5" fill="white" opacity="0.9"/></svg>`;
+          return L.divIcon({
+              className: 'custom-div-icon',
+              html: svg,
+              iconSize: [28, 36],
+              iconAnchor: [14, 36],
+              popupAnchor: [0, -36]
+          });
+      }
+
+      function openPopup(loc, latlng) {
+          const isDrink = loc.category === 'drink';
+          const fallbackImg = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800';
+          const mapsLink = loc.link
+              ? `<a href="${loc.link}" target="_blank" rel="noopener" class="map-popup-link">View on Google Maps <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>`
+              : '';
+          const content = `
+              <div class="map-popup-card">
+                  <div class="map-popup-img-wrap">
+                      <img class="map-popup-img" src="${loc.image || fallbackImg}" alt="${loc.name}" />
+                      <span class="map-popup-badge ${isDrink ? 'drink' : 'food'}">${loc.category || 'food'}</span>
+                  </div>
+                  <div class="map-popup-body">
+                      <span class="map-popup-address">${loc.address || ''}</span>
+                      <h3 class="map-popup-title">${loc.name}</h3>
+                      <div class="map-popup-divider"></div>
+                      <p class="map-popup-review">${loc.review || ''}</p>
+                      ${mapsLink}
+                  </div>
+              </div>`;
+          L.popup({ maxWidth: 300, minWidth: 280, className: 'map-custom-popup', closeButton: true, autoPan: true, autoPanPadding: [20, 20] })
+              .setLatLng(latlng)
+              .setContent(content)
+              .openOn(map);
+      }
+
+      const markerGroup = L.layerGroup().addTo(map);
+      const allMarkers = [];
+
+      locations.forEach(loc => {
+          const marker = L.marker([loc.lat, loc.lng], { icon: getMarkerIcon(loc.category) });
+          marker.category = loc.category;
+          marker.city = loc.city;
+          marker.on('click', function(e) { openPopup(loc, e.latlng); });
+          markerGroup.addLayer(marker);
+          allMarkers.push(marker);
+      });
+
+      // Filter Logic
+      let activeFilters = { category: 'all', city: 'all' };
+
+      document.querySelectorAll('.map-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+              const filterType = btn.dataset.filterType;
+              const filterValue = btn.dataset.filterValue;
+              document.querySelectorAll(`.map-filter-btn[data-filter-type="${filterType}"]`).forEach(b => b.classList.remove('active-filter'));
+              btn.classList.add('active-filter');
+              activeFilters[filterType] = filterValue;
+              updateMarkers();
+          });
+      });
+
+      function updateMarkers() {
+          markerGroup.clearLayers();
+          const filtered = allMarkers.filter(m => {
+              const categoryMatch = activeFilters.category === 'all' || m.category === activeFilters.category;
+              const cityMatch = activeFilters.city === 'all' || m.city === activeFilters.city;
+              return categoryMatch && cityMatch;
+          });
+          filtered.forEach(m => markerGroup.addLayer(m));
+          if (filtered.length > 0) {
+              const group = new L.featureGroup(filtered);
+              map.fitBounds(group.getBounds(), { padding: [100, 100], maxZoom: 12 });
+          } else if (activeFilters.category === 'all' && activeFilters.city === 'all') {
+              map.setView([16.047079, 108.206230], 6);
+          }
+      }
+
+      // Card click — scroll to map, pan, open popup
+      document.querySelectorAll('.map-location-card').forEach(card => {
+          card.addEventListener('click', () => {
+              const lat = parseFloat(card.dataset.cardLat);
+              const lng = parseFloat(card.dataset.cardLng);
+              const loc = locations.find(l => l.lat === lat && l.lng === lng);
+              if (!loc) return;
+              document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => {
+                  map.setView([lat, lng], 13, { animate: true });
+                  openPopup(loc, [lat, lng]);
+              }, 400);
+          });
+      });
+  });
+</script>
