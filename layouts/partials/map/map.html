@@ -119,11 +119,22 @@
     const map = L.map('map', { zoomControl: false, attributionControl: true })
       .setView([16.047079, 108.206230], 6);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    const tileOptions = {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
-    }).addTo(map);
+    };
+    const darkTile  = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', tileOptions);
+    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', tileOptions);
+
+    function isDark() { return document.documentElement.classList.contains('dark'); }
+    function applyTile() {
+      if (isDark()) { lightTile.remove(); darkTile.addTo(map); }
+      else          { darkTile.remove();  lightTile.addTo(map); }
+    }
+    applyTile();
+
+    new MutationObserver(applyTile).observe(document.documentElement, { attributeFilter: ['class'] });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     setTimeout(() => { map.invalidateSize(); }, 100);
