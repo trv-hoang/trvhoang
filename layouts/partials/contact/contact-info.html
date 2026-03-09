@@ -1,0 +1,120 @@
+<div class="space-y-8">
+  <header>
+    <div
+      class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6"
+    >
+      <span class="relative flex h-2 w-2">
+        <span
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
+        ></span>
+        <span
+          class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"
+        ></span>
+      </span>
+      <span class="text-xs font-bold text-amber-500 uppercase tracking-widest"
+        >Available for projects</span
+      >
+    </div>
+    <h1
+      class="text-5xl sm:text-6xl font-bold text-foreground leading-tight mb-6"
+    >
+      Let's create something
+      <span class="text-amber-500">extraordinary</span> together.
+    </h1>
+    <p class="text-muted-foreground text-xl leading-relaxed max-w-lg">
+      Have an idea or just want to chat? I'm always open to new opportunities
+      and interesting conversations.
+    </p>
+  </header>
+
+  <div class="space-y-6">
+    <div class="flex items-center gap-4 group">
+      <div
+        class="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-foreground group-hover:bg-amber-500 group-hover:text-black transition-all duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10z"
+          ></path>
+          <polyline points="22,7 12,14 2,7"></polyline>
+        </svg>
+      </div>
+      <div>
+        <p
+          class="text-sm font-medium text-muted-foreground uppercase tracking-widest"
+        >
+          Email
+        </p>
+        <a
+          href="mailto:hello@trvhoang.me"
+          class="text-lg font-semibold text-foreground hover:text-amber-500 transition-colors"
+          >hello@trvhoang.me</a
+        >
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4 group">
+      <div
+        class="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-foreground group-hover:bg-amber-500 group-hover:text-black transition-all duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+      </div>
+      <div>
+        <p
+          class="text-sm font-medium text-muted-foreground uppercase tracking-widest"
+        >
+          Based in
+        </p>
+        <p class="text-lg font-semibold text-foreground">Hanoi, Vietnam</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Links -->
+  <div class="pt-8 flex items-center gap-6">
+    <a
+      href="https://github.com/trvhoang"
+      target="_blank"
+      class="text-muted-foreground hover:text-amber-500 transition-colors"
+    >
+      {{ partial "icons/social.html" "github" }}
+    </a>
+    <a
+      href="https://linkedin.com/in/trvhoang"
+      target="_blank"
+      class="text-muted-foreground hover:text-amber-500 transition-colors"
+    >
+      {{ partial "icons/social.html" "linkedin" }}
+    </a>
+    <a
+      href="https://facebook.com/trvhoang"
+      target="_blank"
+      class="text-muted-foreground hover:text-amber-500 transition-colors"
+    >
+      {{ partial "icons/social.html" "facebook" }}
+    </a>
+  </div>
+</div>
