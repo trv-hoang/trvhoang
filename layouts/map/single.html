@@ -1,8 +1,30 @@
 {{ define "main" }}
-{{ $locations := .Params.locations | default slice }}
+{{ $places := where .Site.RegularPages "Section" "places" }}
+{{ $places = sort $places "Date" "desc" }}
+
+{{/* Build normalized dict slice — used by JS, partials, and card grid */}}
+{{ $locs := slice }}
 {{ $cities := slice }}
-{{ range $locations }}{{ if .city }}{{ $cities = $cities | append .city }}{{ end }}{{ end }}
-{{ $locCount := len $locations }}
+{{ $cats := slice }}
+{{ range $places }}
+  {{ $cat := .Params.category | default "food" }}
+  {{ $city := .Params.city | default "" }}
+  {{ $locs = $locs | append (dict
+    "name"     .Title
+    "lat"      .Params.lat
+    "lng"      .Params.lng
+    "category" $cat
+    "city"     $city
+    "address"  (.Params.address | default "")
+    "image"    (.Params.image | default "")
+    "link"     (.Params.link | default "")
+    "review"   (.Params.description | default .Summary)
+  ) }}
+  {{ if $city }}{{ $cities = $cities | append $city }}{{ end }}
+  {{ $cats = $cats | append $cat }}
+{{ end }}
+
+{{ $locCount := len $locs }}
 {{ $cityCount := len ($cities | uniq) }}
 
 <div class="py-16 space-y-12 animate-fade-in">
@@ -23,20 +45,23 @@
     {{ end }}
   </section>
 
-  {{ partial "map/map.html" . }}
+  {{ partial "map/map.html" (dict "locs" $locs "cities" ($cities | uniq) "cats" ($cats | uniq) "totalCount" $locCount) }}
 
   <!-- Location Card Grid -->
   {{ if gt $locCount 0 }}
-  <section class="space-y-6">
+  <section class="space-y-6" id="places-grid-section">
     <h2 class="flex items-center gap-2 text-lg font-semibold text-foreground">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
       All Places
     </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {{ range $locations }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="places-grid">
+      {{ range $locs }}
         {{ partial "map/location-card.html" . }}
       {{ end }}
     </div>
+    <p id="no-places-msg" class="hidden py-10 text-center text-sm text-muted-foreground border border-dashed border-border/40 rounded-2xl">
+      No places match the current filters.
+    </p>
   </section>
   {{ end }}
 </div>
