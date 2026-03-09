@@ -1,0 +1,56 @@
+{{ define "main" }}
+<div class="py-16 space-y-10 animate-fade-in">
+  <!-- Header -->
+  <section class="space-y-4">
+    <h1 class="text-3xl font-bold tracking-tight text-foreground">{{ .Title }}</h1>
+    <p class="text-muted-foreground max-w-xl">
+      {{ .Params.description }}
+    </p>
+
+    <!-- Tag filters -->
+    <div class="flex flex-wrap gap-2">
+      <a
+        href="/blog/"
+        class="text-xs px-3.5 py-1.5 rounded-full border border-border/60 bg-card/80 text-foreground cursor-pointer transition-all duration-200"
+        >all
+      </a>
+      {{ $blogTags := slice }}
+      {{ range where .Site.RegularPages "Type" "blog" }}
+        {{ if isset .Params "tags" }}
+          {{ range .Params.tags }}
+            {{ if not (in $blogTags .) }}
+              {{ $blogTags = $blogTags | append . }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+      {{ range $blogTags }}
+      <a
+        href="{{ "/tags/" | relLangURL }}{{ . | urlize }}"
+        class="text-xs px-3.5 py-1.5 rounded-full border border-border/40 text-muted-foreground hover:bg-card hover:text-foreground cursor-pointer transition-all duration-200"
+      >
+        {{ . }}
+      </a>
+      {{ end }}
+    </div>
+  </section>
+
+  {{ $pages := where .Site.RegularPages "Type" "blog" }} {{ $len := len $pages
+  }} {{ if gt $len 0 }}
+
+  <!-- Featured post (the first one) -->
+  {{ $featured := index $pages 0 }} {{ partial "blog/blog-card.html" (dict "page"
+  $featured "featured" true) }}
+
+  <!-- Post grid (the rest) -->
+  {{ if gt $len 1 }}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {{ range after 1 $pages }} {{ partial "blog/blog-card.html" (dict "page" .
+    "featured" false) }} {{ end }}
+  </div>
+  {{ end }} {{ else }}
+  <p class="text-sm text-muted-foreground">No posts found yet.</p>
+  {{ end }}
+</div>
+{{ end }}

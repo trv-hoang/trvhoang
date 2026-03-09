@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="{{ site.LanguageCode | default "en" }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} - {{ site.Title }}{{ end }}</title>
+
+  <!-- 1. The Global CSS Configuration (Tailwind v4 CLI writes to static/global.css) -->
+  <link rel="stylesheet" href="/global.css">
+
+  <!-- 2. The Page-Specific CSS injected automatically following the user's folder structure -->
+  <!-- Check if a style.css exists next to the current layout -->
+  {{ $pageCssPath := "" }}
+  {{ if .IsHome }}
+    {{ $pageCssPath = "layouts/style.css" }}
+  {{ else }}
+    {{ $pageCssPath = printf "layouts/%s/style.css" .Type }}
+  {{ end }}
+  
+  {{ if os.FileExists $pageCssPath }}
+    <!-- Found page-specific CSS at {{ $pageCssPath }} -->
+    <style>
+      {{ readFile $pageCssPath | safeCSS }}
+    </style>
+  {{ end }}
+
+  <!-- Theme Initialization Script to prevent FOUC -->
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col bg-background text-foreground selection:bg-rose-500/30 overflow-y-scroll antialiased">
+  
+  <!-- Floating Navigation -->
+  <div class="fixed top-5 left-1/2 -translate-x-1/2 z-50">
+    <nav id="floating-nav" class="flex items-center gap-1 px-3 py-2 rounded-full border border-white/10 shadow-lg shadow-black/20 backdrop-blur-xl bg-black/40 relative">
+      <div id="nav-pill" class="absolute h-8 rounded-full bg-white/15 transition-all outline-none pointer-events-none" style="transition-duration: 400ms; transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0;"></div>
+      
+      {{ $currentUrl := .RelPermalink }}
+      {{ $navTabs := slice (dict "label" "About" "url" "/about/") (dict "label" "Projects" "url" "/projects/") (dict "label" "Blog" "url" "/blog/") (dict "label" "Map" "url" "/map/") (dict "label" "Contact" "url" "/contact/") }}
+      
+      {{ range $navTabs }}
+        {{ $isActive := strings.HasPrefix $currentUrl .url }}
+        {{ $classes := "nav-link relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200" }}
+        {{ if $isActive }}
+          <a href="{{ .url }}" class="{{ $classes }} text-white active-tab" data-active="true">{{ .label }}</a>
+        {{ else }}
+          <a href="{{ .url }}" class="{{ $classes }} text-white/50 hover:text-white">{{ .label }}</a>
+        {{ end }}
+      {{ end }}
+
+      <!-- Divider -->
+      <div class="w-px h-4 bg-white/20 mx-1"></div>
+
+      <!-- Dark mode toggle -->
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="p-1.5 rounded-full text-white/50 hover:text-white transition-colors duration-200 relative z-10 w-8 h-8 flex items-center justify-center">
+        <!-- Sun icon (shows in dark mode, clicking it changes to light) -->
+        <svg id="theme-icon-sun" class="w-4 h-4 hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <!-- Moon icon (shows in light mode, clicking it changes to dark) -->
+        <svg id="theme-icon-moon" class="w-4 h-4 block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const pill = document.getElementById("nav-pill");
+      const activeTab = document.querySelector(".active-tab");
+      const nav = document.getElementById("floating-nav");
+      const themeToggle = document.getElementById("theme-toggle");
+      
+      // Theme Toggle Logic
+      if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+          if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.theme = 'light';
+          } else {
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark';
+          }
+        });
+      }
+      
+      function updatePill(tab) {
+        if (!tab || !pill) return;
+        const navRect = nav.getBoundingClientRect();
+        const tabRect = tab.getBoundingClientRect();
+        
+        const width = tabRect.width;
+        const left = tabRect.left - navRect.left;
+
+        pill.style.width = `${width}px`;
+        pill.style.left = `${left}px`;
+        pill.style.opacity = '1';
+
+        // Save current position for next page load
+        sessionStorage.setItem('nav-pill-pos', JSON.stringify({ width, left }));
+      }
+
+      // Restore previous position if it exists to animate FROM it
+      const savedPos = sessionStorage.getItem('nav-pill-pos');
+      if (savedPos && activeTab && pill) {
+        try {
+          const { width, left } = JSON.parse(savedPos);
+          // Set initial position without transition
+          pill.style.transition = 'none';
+          pill.style.width = `${width}px`;
+          pill.style.left = `${left}px`;
+          pill.style.opacity = '1';
+          
+          // Force DOM reflow so the browser registers the starting position
+          void pill.offsetWidth;
+          
+          // Restore transition for the animation
+          pill.style.transition = '';
+        } catch (e) {}
+      }
+
+      if (activeTab) {
+        // slight delay to let layout settle, then animate to active tab
+        setTimeout(() => updatePill(activeTab), 50);
+      }
+
+      // Re-calculate on resize
+      window.addEventListener("resize", () => updatePill(activeTab));
+    });
+  </script>
+
+  <main class="flex-grow max-w-5xl mx-auto w-full p-6 mt-20">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer class="w-full border-t border-border/40 mt-24">
+    <div class="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-muted-foreground">
+        &copy; {{ now.Format "2006" }} 
+        <a href="/about" class="hover:text-foreground transition-colors font-medium">Viet Hoang</a> - Be lost in sweet sensations.
+      </p>
+      <div class="flex items-center gap-4">
+        <!-- GitHub -->
+        <a href="https://github.com/trvhoang" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="opacity-70 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1">
+          {{ partial "icons/social.html" "github" }}
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://linkedin.com/in/trvhoang" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="opacity-70 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1">
+          {{ partial "icons/social.html" "linkedin" }}
+        </a>
+        <!-- Facebook -->
+        <a href="https://facebook.com/trvhoang" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="opacity-70 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1">
+          {{ partial "icons/social.html" "facebook" }}
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+/* Custom encapsulated CSS for the About Page */
+.about-container {
+  border-top: 4px solid var(--color-brand);
+  padding-top: 2rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 1rem;
+  padding: 2rem;
+}

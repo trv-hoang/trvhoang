@@ -1,0 +1,21 @@
+{{ if .url }}
+<a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="block rounded-2xl border border-border/50 bg-card/30 p-5 transition-all duration-200 hover:border-border hover:bg-card/60 group cursor-pointer">
+{{ else }}
+<div class="block rounded-2xl border border-border/50 bg-card/30 p-5">
+{{ end }}
+  <div class="space-y-1">
+    <div class="flex items-start justify-between gap-4">
+      <p class="font-medium text-foreground {{ if .url }}group-hover:text-amber-400 transition-colors{{ end }}">{{ .title }}</p>
+      {{ if .url }}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-amber-400 flex-shrink-0 mt-1"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      {{ end }}
+    </div>
+    <p class="text-sm text-muted-foreground">{{ .issuer }}</p>
+    <p class="text-xs text-muted-foreground">{{ .period }}</p>
+  </div>
+  <p class="mt-3 text-sm text-muted-foreground">{{ .description }}</p>
+{{ if .url }}
+</a>
+{{ else }}
+</div>
+{{ end }}

@@ -1,0 +1,28 @@
+{{ define "main" }}
+<div class="py-16 space-y-12 animate-fade-in">
+  <!-- Header -->
+  <section class="space-y-3">
+    <h1 class="text-3xl font-bold tracking-tight text-foreground">{{ .Title }}</h1>
+    <p class="text-muted-foreground max-w-xll">
+      {{ .Params.description }}
+    </p>
+  </section>
+
+  <!-- Project grid -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    {{ $projects := where .Site.RegularPages "Type" "project" }}
+    {{ $projects = sort $projects "Params.weight" }}
+
+    {{ if $projects }}
+      {{ range $projects }}
+        {{ partial "projects/project-card.html" . }}
+      {{ end }}
+    {{ else }}
+      <div class="col-span-full py-12 text-center text-muted-foreground border border-dashed border-border/50 rounded-2xl bg-card/10">
+        <p>No projects added yet.</p>
+        <p class="text-sm mt-2">Create markdown files in <code class="bg-muted px-1.5 py-0.5 rounded text-xs text-foreground">content/projects/</code></p>
+      </div>
+    {{ end }}
+  </section>
+</div>
+{{ end }}
