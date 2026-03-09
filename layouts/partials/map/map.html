@@ -111,6 +111,7 @@
 ></script>
 
 <script>
+  // @ts-nocheck
   document.addEventListener('DOMContentLoaded', function () {
     const locations = {{ $locs | jsonify | safeJS }};
     if (!locations || !document.getElementById('map')) return;
