@@ -8,32 +8,7 @@
     </p>
 
     <!-- Tag filters -->
-    <div class="flex flex-wrap gap-2">
-      <a
-        href="/blog/"
-        class="text-xs px-3.5 py-1.5 rounded-full border border-border/60 bg-card/80 text-foreground cursor-pointer transition-all duration-200"
-        >all
-      </a>
-      {{ $blogTags := slice }}
-      {{ range where .Site.RegularPages "Type" "blog" }}
-        {{ if isset .Params "tags" }}
-          {{ range .Params.tags }}
-            {{ if not (in $blogTags .) }}
-              {{ $blogTags = $blogTags | append . }}
-            {{ end }}
-          {{ end }}
-        {{ end }}
-      {{ end }}
-
-      {{ range $blogTags }}
-      <a
-        href="{{ "/tags/" | relLangURL }}{{ . | urlize }}"
-        class="text-xs px-3.5 py-1.5 rounded-full border border-border/40 text-muted-foreground hover:bg-card hover:text-foreground cursor-pointer transition-all duration-200"
-      >
-        {{ . }}
-      </a>
-      {{ end }}
-    </div>
+    {{ partial "blog/tag-filters.html" (dict "site" .Site "activeTag" "all") }}
   </section>
 
   {{ $pages := where .Site.RegularPages "Type" "blog" }} {{ $len := len $pages
