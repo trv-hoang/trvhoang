@@ -42,16 +42,32 @@
       
       {{ $currentUrl := .RelPermalink }}
       {{ $navTabs := slice (dict "label" "About" "url" "/about/") (dict "label" "Projects" "url" "/projects/") (dict "label" "Blog" "url" "/blog/") (dict "label" "Map" "url" "/map/") (dict "label" "Contact" "url" "/contact/") }}
-      
-      {{ range $navTabs }}
-        {{ $isActive := strings.HasPrefix $currentUrl .url }}
-        {{ $classes := "nav-link relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200" }}
-        {{ if $isActive }}
-          <a href="{{ .url }}" class="{{ $classes }} text-white active-tab" data-active="true">{{ .label }}</a>
-        {{ else }}
-          <a href="{{ .url }}" class="{{ $classes }} text-white/50 hover:text-white">{{ .label }}</a>
+
+      {{/* Current page label for mobile */}}
+      {{ $currentLabel := "Menu" }}
+      {{ range $navTabs }}{{ if strings.HasPrefix $currentUrl .url }}{{ $currentLabel = .label }}{{ end }}{{ end }}
+
+      <!-- Desktop nav links (hidden on mobile) -->
+      <div class="hidden sm:flex items-center gap-1">
+        {{ range $navTabs }}
+          {{ $isActive := strings.HasPrefix $currentUrl .url }}
+          {{ $classes := "nav-link relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200" }}
+          {{ if $isActive }}
+            <a href="{{ .url }}" class="{{ $classes }} text-white active-tab" data-active="true">{{ .label }}</a>
+          {{ else }}
+            <a href="{{ .url }}" class="{{ $classes }} text-white/50 hover:text-white">{{ .label }}</a>
+          {{ end }}
         {{ end }}
-      {{ end }}
+      </div>
+
+      <!-- Mobile: current page + hamburger (hidden on sm+) -->
+      <div class="flex sm:hidden items-center gap-1">
+        <span class="relative z-10 px-3 py-1.5 text-sm font-medium text-white">{{ $currentLabel }}</span>
+        <button id="mobile-menu-btn" aria-label="Open menu" class="relative z-10 p-1.5 rounded-full text-white/60 hover:text-white transition-colors w-8 h-8 flex items-center justify-center">
+          <svg id="mobile-icon-open" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          <svg id="mobile-icon-close" class="w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
 
       <!-- Divider -->
       <div class="w-px h-4 bg-white/20 mx-1"></div>
@@ -64,6 +80,16 @@
         <svg id="theme-icon-moon" class="w-4 h-4 block dark:hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
     </nav>
+
+    <!-- Mobile dropdown menu -->
+    <div id="mobile-menu" class="hidden sm:hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-44 py-2 px-1 rounded-2xl border border-white/10 shadow-lg shadow-black/30 backdrop-blur-xl bg-black/60">
+      {{ range $navTabs }}
+        {{ $isActive := strings.HasPrefix $currentUrl .url }}
+        <a href="{{ .url }}" class="block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors {{ if $isActive }}text-white bg-white/10{{ else }}text-white/60 hover:text-white hover:bg-white/5{{ end }}">
+          {{ .label }}
+        </a>
+      {{ end }}
+    </div>
   </div>
 
   <script>
@@ -82,6 +108,28 @@
           } else {
             document.documentElement.classList.add('dark');
             localStorage.theme = 'dark';
+          }
+        });
+      }
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileIconOpen = document.getElementById('mobile-icon-open');
+      const mobileIconClose = document.getElementById('mobile-icon-close');
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = !mobileMenu.classList.contains('hidden');
+          mobileMenu.classList.toggle('hidden', isOpen);
+          mobileIconOpen.classList.toggle('hidden', !isOpen);
+          mobileIconClose.classList.toggle('hidden', isOpen);
+        });
+        document.addEventListener('click', (e) => {
+          if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+            mobileIconOpen.classList.remove('hidden');
+            mobileIconClose.classList.add('hidden');
           }
         });
       }
