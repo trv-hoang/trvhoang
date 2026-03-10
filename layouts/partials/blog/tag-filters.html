@@ -1,0 +1,57 @@
+{{/*
+  Params:
+    .site      — .Site
+    .activeTag — "all" | tag string (e.g. "tech")
+*/}}
+{{ $site      := .site }}
+{{ $activeTag := .activeTag }}
+
+{{/* Tag → dot color */}}
+{{ $tagColors := dict
+  "tech"       "bg-amber-400"
+  "ai"         "bg-violet-400"
+  "api"        "bg-blue-400"
+  "cloudflare" "bg-orange-400"
+  "fastapi"    "bg-green-400"
+  "hugo"       "bg-rose-400"
+  "python"     "bg-sky-400"
+  "react"      "bg-cyan-400"
+  "tailwind"   "bg-teal-400"
+  "typescript" "bg-indigo-400"
+}}
+
+{{/* Collect tags with post counts */}}
+{{ $tagMap := dict }}
+{{ range where $site.RegularPages "Type" "blog" }}
+  {{ range .Params.tags }}
+    {{ $curr := index $tagMap . | default 0 }}
+    {{ $tagMap = merge $tagMap (dict . (add $curr 1)) }}
+  {{ end }}
+{{ end }}
+{{ $totalPosts := len (where $site.RegularPages "Type" "blog") }}
+
+{{/* Base pill classes */}}
+{{ $base    := "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all duration-200" }}
+{{ $active  := "border-amber-500/60 bg-amber-500/10 text-foreground" }}
+{{ $inactive := "border-border/60 text-muted-foreground hover:border-amber-500/50 hover:bg-amber-500/5 hover:text-foreground" }}
+
+<div class="flex flex-wrap gap-2 pt-2">
+
+  <!-- All -->
+  <a href="/blog/" class="{{ $base }} {{ if eq $activeTag "all" }}{{ $active }}{{ else }}{{ $inactive }}{{ end }}">
+    All
+    <span class="text-[10px] bg-muted/60 text-muted-foreground rounded px-1.5 py-0.5">{{ $totalPosts }}</span>
+  </a>
+
+  {{ range $tag, $count := $tagMap }}
+    {{ $dotColor := index $tagColors $tag | default "bg-muted-foreground" }}
+    {{ $isActive := eq $activeTag $tag }}
+    <a href="{{ "/tags/" | relLangURL }}{{ $tag | urlize }}"
+       class="{{ $base }} {{ if $isActive }}{{ $active }}{{ else }}{{ $inactive }}{{ end }}">
+      <span class="w-1.5 h-1.5 rounded-full {{ $dotColor }} shrink-0"></span>
+      {{ $tag }}
+      <span class="text-[10px] bg-muted/60 text-muted-foreground rounded px-1.5 py-0.5">{{ $count }}</span>
+    </a>
+  {{ end }}
+
+</div>
