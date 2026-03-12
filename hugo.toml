@@ -1,3 +1,7 @@
 baseURL = 'https://trvhoang.me/'
 languageCode = 'en-us'
 title = 'trvhoang'
+
+[params]
+  description = 'Personal website of Viet Hoang — software engineer, explorer.'
+  ogImage = 'https://trvhoang.me/images/og-default.png'

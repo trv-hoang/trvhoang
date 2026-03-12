@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "npx concurrently \"npm run dev:hugo\" \"npm run dev:tailwind\"",
-    "dev:hugo": "hugo server -D -p 1313",
+    "dev:hugo": "hugo server -D -p 1315",
     "dev:tailwind": "npx @tailwindcss/cli -i ./assets/css/global.css -o ./static/global.css --watch",
     "build": "npx @tailwindcss/cli -i ./assets/css/global.css -o ./static/global.css --minify && hugo --gc --minify"
   },
