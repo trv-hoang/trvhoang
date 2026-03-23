@@ -5,3 +5,5 @@ title = 'trvhoang'
 [params]
   description = 'trvhoang — software engineer, coffee addict.'
   ogImage = 'https://trvhoang.me/images/og-default.png'
+  # Cloudflare Web Analytics - replace with your token from the Cloudflare dashboard
+  cloudflareAnalyticsToken = 'YOUR_TOKEN_HERE'

@@ -206,5 +206,10 @@
     </div>
   </footer>
 
+  <!-- Cloudflare Web Analytics -->
+  {{ with site.Params.cloudflareAnalyticsToken }}
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "{{ . }}"}'></script>
+  {{ end }}
+
 </body>
 </html>
