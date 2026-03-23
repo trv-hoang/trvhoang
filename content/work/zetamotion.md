@@ -3,11 +3,8 @@ title: "Engineer Intern at Zetamotion"
 company: "Zetamotion"
 location: "Remote - United Kingdom"
 roles:
-  - title: "Software Engineer"
-    period: "January 2026 — Present"
-    description: "Leading the frontend architecture team for enterprise AI tools. Transitioned older systems to Next.js 15."
   - title: "Engineer Intern"
-    period: "July 2025 — December 2025"
+    period: "July 2025 — Present"
     description: "Worked primarily on AI-based enterprise applications using React, Typescript, Python, and FastAPI. Creating custom UI components and managing complex states. Collaborated with teams to refactor legacy code, improving performance and developer experience."
 tags: ["React", "TypeScript", "FastAPI", "Python"]
 type: "work"
@@ -17,18 +14,22 @@ weight: 1
 
 ## Overview
 
-During my time at Zetamotion, I was primarily responsible for building and maintaining AI-based enterprise web applications. It was a role that heavily demanded cross-functional collaboration between frontend architecture and backend Python services.
+At Zeta Motion, I worked on developing AI-powered enterprise web applications, focusing on delivering responsive user interfaces and reliable integration with backend services. The role required handling real-time data flows from AI systems while maintaining performance and scalability across the application. I collaborated closely with cross-functional teams, including backend developers and product managers, to ensure that the applications met user needs and adhered to best practices in software development. The experience provided valuable insights into building production-ready systems that effectively leverage AI technologies in a business context.
 
 ### Key Responsibilities
 
-1. **Frontend Development**: I used React and TypeScript to build complex, highly interactive UI components. State management was a significant part of the challenge given the real-time nature of AI inference results.
-2. **Backend Integration**: Communicated heavily with FastAPI endpoints. I had to ensure our API contracts were strictly typed and highly performant.
-3. **Refactoring Legacy Code**: A large portion of my early weeks were spent refactoring older Class-based React components into modern Functional Hooks, significantly improving developer experience and runtime performance.
+1. **Frontend Development**: Built and maintained dynamic web interfaces using React and TypeScript, handling complex state management for real-time AI outputs and ensuring smooth user interactions. This involved creating reusable components, optimizing rendering performance, and ensuring responsive design across various devices.
+2. **System Integration**: Collaborated closely with backend services (FastAPI) to integrate AI inference results into the frontend, ensuring efficient data flow and consistent API communication. This included writing tests to validate API contracts and working with backend developers to troubleshoot and optimize performance.
+3. **Codebase Modernization**: Refactored legacy frontend components by transitioning from class-based architecture to modern React Hooks, improving code maintainability and overall system performance. This effort also involved enhancing the developer experience by simplifying component structures and improving readability.
 
 ### Achievements
 
-- Reduced payload sizes and improved page load speeds by splitting complex states.
-- Seamlessly introduced Python microservices into the core infrastructure.
-- Received positive feedback on UI consistency across the entire ecosystem.
+- Improved frontend performance by optimizing state handling and reducing unnecessary re-renders
+- Contributed to stabilizing data flow between frontend and backend services in real-time AI scenarios
+- Enhanced code quality and developer experience through systematic refactoring efforts
+- Helped standardize UI behavior across features, leading to a more consistent user experience
+- Gained practical experience in building and maintaining AI-driven applications in a production environment
+- Strengthened understanding of end-to-end system development, from feature implementation to deployment workflows
+- Received positive feedback from team members and stakeholders on the improvements made to the codebase and overall application performance
 
 *More details to come...*
