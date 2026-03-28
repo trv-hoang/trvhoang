@@ -15,8 +15,10 @@
   }} {{ if gt $len 0 }}
 
   <!-- Featured post (the first one) -->
+  <div class="reveal">
   {{ $featured := index $pages 0 }} {{ partial "blog/blog-card.html" (dict "page"
   $featured "featured" true) }}
+  </div>
 
   <!-- Post grid (the rest) -->
   {{ if gt $len 1 }}
