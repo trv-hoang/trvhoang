@@ -1,7 +1,7 @@
 {{ define "main" }}
-<div class="py-16 space-y-12 animate-fade-in">
+<div class="py-16 space-y-12">
   <!-- Header -->
-  <section class="space-y-3">
+  <section class="reveal space-y-3">
     <h1 class="text-3xl font-bold tracking-tight text-foreground">{{ .Title }}</h1>
     <p class="text-muted-foreground max-w-xll">
       {{ .Params.description }}
@@ -9,7 +9,7 @@
   </section>
 
   <!-- Project grid -->
-  <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <section class="reveal grid grid-cols-1 sm:grid-cols-2 gap-4">
     {{ $projects := where .Site.RegularPages "Type" "project" }}
     {{ $projects = sort $projects "Params.weight" }}
 

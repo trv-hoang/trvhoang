@@ -54,6 +54,37 @@
   background: oklch(0.78 0.15 70 / 30%);
 }
 
+/* ── Page transitions ─────────────────────────────────────────────── */
+.page-transition-out {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.page-transition-in {
+  animation: page-fade-in 0.3s ease both;
+}
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Scroll reveal ────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Interaction polish ────────────────────────────────────────────── */
+a:active, button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
 /* ── Glass card backdrop for readability over particles ───────────── */
 .glass-card {
   backdrop-filter: blur(12px);

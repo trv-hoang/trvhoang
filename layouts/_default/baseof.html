@@ -323,6 +323,139 @@
     </div>
   </footer>
 
+  <!-- Smooth Transitions -->
+  <script>
+  (function() {
+    // === SCROLL REVEAL ===
+    function initReveal() {
+      const els = document.querySelectorAll('.reveal');
+      if (!els.length) return;
+      const obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+      els.forEach(function(el) { obs.observe(el); });
+    }
+
+    // === PAGE TRANSITIONS ===
+    var isTransitioning = false;
+    // Pages that need full reload (heavy JS like Leaflet)
+    var fullReloadPaths = ['/map/'];
+
+    function shouldIntercept(anchor) {
+      if (!anchor || !anchor.href) return false;
+      if (anchor.target === '_blank') return false;
+      if (anchor.origin !== location.origin) return false;
+      if (anchor.pathname === location.pathname) return false;
+      if (anchor.hasAttribute('download')) return false;
+      for (var i = 0; i < fullReloadPaths.length; i++) {
+        if (anchor.pathname.indexOf(fullReloadPaths[i]) === 0) return false;
+        if (location.pathname.indexOf(fullReloadPaths[i]) === 0) return false;
+      }
+      return true;
+    }
+
+    function transitionTo(url) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      var main = document.querySelector('main');
+      if (!main) { location.href = url; return; }
+
+      // Animate out
+      main.classList.add('page-transition-out');
+
+      setTimeout(function() {
+        fetch(url)
+          .then(function(r) { return r.text(); })
+          .then(function(html) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+            var newMain = doc.querySelector('main');
+            var newTitle = doc.querySelector('title');
+
+            if (!newMain) { location.href = url; return; }
+
+            // Swap content
+            main.innerHTML = newMain.innerHTML;
+            if (newTitle) document.title = newTitle.textContent;
+
+            // Update URL
+            history.pushState({}, '', url);
+
+            // Animate in
+            main.classList.remove('page-transition-out');
+            main.classList.add('page-transition-in');
+            setTimeout(function() { main.classList.remove('page-transition-in'); }, 350);
+
+            // Scroll to top
+            window.scrollTo({ top: 0 });
+
+            // Update nav pill
+            updateNav(url);
+
+            // Re-init scroll reveals on new content
+            initReveal();
+
+            isTransitioning = false;
+          })
+          .catch(function() {
+            location.href = url;
+          });
+      }, 200);
+    }
+
+    function updateNav(url) {
+      var path = new URL(url, location.origin).pathname;
+      var links = document.querySelectorAll('#floating-nav .nav-link');
+      var pill = document.getElementById('nav-pill');
+      var nav = document.getElementById('floating-nav');
+
+      links.forEach(function(link) {
+        var isActive = path.indexOf(link.getAttribute('href')) === 0;
+        link.classList.toggle('active-tab', isActive);
+        link.setAttribute('data-active', isActive ? 'true' : 'false');
+        if (isActive) {
+          link.classList.remove('text-white/50', 'hover:text-white');
+          link.classList.add('text-white');
+        } else {
+          link.classList.add('text-white/50', 'hover:text-white');
+          link.classList.remove('text-white');
+        }
+
+        if (isActive && pill && nav) {
+          var navRect = nav.getBoundingClientRect();
+          var tabRect = link.getBoundingClientRect();
+          pill.style.width = tabRect.width + 'px';
+          pill.style.left = (tabRect.left - navRect.left) + 'px';
+          pill.style.opacity = '1';
+          sessionStorage.setItem('nav-pill-pos', JSON.stringify({ width: tabRect.width, left: tabRect.left - navRect.left }));
+        }
+      });
+    }
+
+    // Handle back/forward
+    window.addEventListener('popstate', function() {
+      transitionTo(location.href);
+    });
+
+    // Intercept clicks
+    document.addEventListener('click', function(e) {
+      var anchor = e.target.closest('a');
+      if (shouldIntercept(anchor)) {
+        e.preventDefault();
+        transitionTo(anchor.href);
+      }
+    });
+
+    // Init reveals on first load
+    document.addEventListener('DOMContentLoaded', initReveal);
+  })();
+  </script>
+
   <!-- Cloudflare Web Analytics -->
   {{ with site.Params.cloudflareAnalyticsToken }}
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "{{ . }}"}'></script>
