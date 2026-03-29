@@ -1,12 +1,13 @@
 ---
 title: "Software Engineer Intern at 1Matrix"
 company: "1Matrix"
+logo: "/images/company-1matrix.png"
 location: "Onsite - Vietnam"
 roles:
   - title: "Software Engineer Intern"
     period: "November 2025 — Present"
-    description: "Worked primarily on AI-based enterprise applications using React, Typescript, Python, and FastAPI. Creating custom UI components and managing complex states. Collaborated with teams to refactor legacy code, improving performance and developer experience."
-tags: ["React", "TypeScript", "Solidity", "Blockchain", "Cloudflare", "TDD"]
+    description: "Contributing to the development of an internal CRM system for sales teams, focusing on building responsive user interfaces and supporting real-time workflows integrated with AI-driven processes. Gained hands-on experience in developing and maintaining a production-ready system across multiple environments."
+tags: ["Blockchain", "Solidity", "TypeScript", "React", "Cloudflare", "TDD"]
 type: "work"
 url: "/about/work/1matrix/"
 weight: 2

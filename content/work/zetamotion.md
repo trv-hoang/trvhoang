@@ -1,11 +1,12 @@
 ---
 title: "Engineer Intern at Zetamotion"
 company: "Zetamotion"
+logo: "/images/company-zetamotion.webp"
 location: "Remote - United Kingdom"
 roles:
   - title: "Engineer Intern"
     period: "July 2025 — Present"
-    description: "Worked primarily on AI-based enterprise applications using React, Typescript, Python, and FastAPI. Creating custom UI components and managing complex states. Collaborated with teams to refactor legacy code, improving performance and developer experience."
+    description: "Worked primarily on AI-based enterprise applications using React, Typescript, Python, and FastAPI. Creating custom UI components and managing complex states. Collaborated with teams to refactor legacy code, improving performance and developer experience while maintaining system stability. Gained experience in building and maintaining production-ready applications in a fast-paced environment."
 tags: ["React", "TypeScript", "FastAPI", "Python"]
 type: "work"
 url: "/about/work/zetamotion/"
