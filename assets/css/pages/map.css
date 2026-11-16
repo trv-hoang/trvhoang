@@ -154,6 +154,28 @@
   scroll-snap-align: start;
 }
 .map-popup-media { position: relative; }
+/* previous / next buttons over the photo strip (wired in map.js) */
+.map-popup-nav {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  backdrop-filter: blur(4px);
+  transition: opacity var(--t-hover) ease, background-color var(--t-hover) ease;
+}
+.map-popup-nav:hover { background: rgb(0 0 0 / 0.75); }
+.map-popup-nav:disabled { opacity: 0; pointer-events: none; }
+.map-popup-nav:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.map-popup-prev { left: 0.5rem; }
+.map-popup-next { right: 0.5rem; }
 .map-popup-count {
   position: absolute;
   left: 0.6rem;

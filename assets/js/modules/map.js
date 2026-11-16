@@ -368,6 +368,23 @@ export function initMap() {
     focus(pick, banner);
   });
 
+  // ── popup photos: previous / next buttons ────────────────────
+  // Popups are created by MapLibre on the fly, so listen once on the map.
+  const syncPhotoButtons = (strip) => {
+    const media = strip.closest(".map-popup-media");
+    const atStart = strip.scrollLeft < 4;
+    const atEnd = strip.scrollLeft + strip.clientWidth > strip.scrollWidth - 4;
+    media.querySelector(".map-popup-prev")?.toggleAttribute("disabled", atStart);
+    media.querySelector(".map-popup-next")?.toggleAttribute("disabled", atEnd);
+  };
+  el.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-photo-step]");
+    if (!button) return;
+    const strip = button.closest(".map-popup-media").querySelector(".map-popup-photos");
+    strip.scrollBy({ left: Number(button.dataset.photoStep) * strip.clientWidth, behavior: reduceMotion() ? "auto" : "smooth" });
+  });
+  el.addEventListener("scroll", (e) => { if (e.target.classList?.contains("map-popup-photos")) syncPhotoButtons(e.target); }, true);
+
   // ── cards ↔ pins ──────────────────────────────────────────────
   document.querySelectorAll("[data-place]").forEach((card) => {
     const i = Number(card.dataset.place);

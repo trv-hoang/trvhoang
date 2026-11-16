@@ -36,7 +36,11 @@
   <div class="map-popup-photos" tabindex="0" aria-label="{{ i18n "photos_of" (dict "Name" $p.Title) }}">
     {{ range $i, $img := . }}<img src="{{ $img.RelPermalink }}" width="320" height="180" alt="{{ $p.Title }}, photo {{ add $i 1 }}" loading="lazy">{{ end }}
   </div>
-  {{ if gt (len .) 1 }}<span class="map-popup-count">{{ i18n "photos_count" (dict "Count" (len .)) }}</span>{{ end }}
+  {{ if gt (len .) 1 }}
+  <span class="map-popup-count">{{ i18n "photos_count" (dict "Count" (len .)) }}</span>
+  <button type="button" class="map-popup-nav map-popup-prev" data-photo-step="-1" aria-label="{{ i18n "previous_photo" }}" disabled>‹</button>
+  <button type="button" class="map-popup-nav map-popup-next" data-photo-step="1" aria-label="{{ i18n "next_photo" }}">›</button>
+  {{ end }}
 </div>
 {{ end }}
 
