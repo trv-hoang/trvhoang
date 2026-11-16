@@ -1,5 +1,5 @@
 ---
 title: "Places"
-_build:
+build:
   render: "never"
 ---

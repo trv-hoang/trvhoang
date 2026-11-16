@@ -1,0 +1,38 @@
+# Colours for place categories on /map/ (markers, filter dots, popups).
+# A category that is not listed here falls back to `default`.
+colours:
+  default: "#f59e0b"
+  restaurant: "#f59e0b"
+  food: "#f59e0b"
+  pastry: "#ec4899"
+  cafe: "#c2410c"
+  specialty coffee: "#92400e"
+  tea: "#16a34a"
+  matcha: "#65a30d"
+  specialty tea: "#0d9488"
+  shop: "#2563eb"
+  mall: "#7c3aed"
+  convenience store: "#0891b2"
+  landmark: "#dc2626"
+  scenic: "#0284c7"
+
+# Map styles (vector, worldwide, no key). Built by `npm run map:styles` from
+# OpenFreeMap's open styles, recoloured to the site palette. To use another
+# provider (MapTiler, Mapbox…), point params.map.styleLight / styleDark in
+# hugo.toml at its style URL.
+styles:
+  light: "/map/light.json"
+  dark: "/map/dark.json"
+
+# How a place's `rating:` (1–5) shows in its popup: a label and a fox
+# (assets/images/mascots/fox_<mascot>.png). `sweet` replaces the mascot for
+# pastry and dessert places rated 4 or 5.
+ratings:
+  "5": { label: "Must go", mascot: "love" }
+  "4": { label: "Good", mascot: "happy" }
+  "3": { label: "Okay", mascot: "thinking" }
+  "2": { label: "Skip", mascot: "sweating" }
+  "1": { label: "Skip", mascot: "crying" }
+sweet:
+  categories: ["pastry"]
+  mascot: "cookie"
