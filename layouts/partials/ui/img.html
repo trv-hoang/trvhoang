@@ -1,0 +1,40 @@
+{{- /* An image from assets/, resized to the size it is shown at and served as WebP,
+     with a 2x version for sharp screens. A path that is not in assets/ (an outside
+     URL, a file in static/) is used as is.
+     Params: .src ("/images/avatar.jpg" or "images/avatar.jpg"), .width (CSS pixels
+     it is shown at), .alt, .class, .loading ("lazy" by default), .fit ("fill" crops
+     to .height; otherwise the aspect ratio is kept), .anchor (where a fill crop
+     centres: "Smart" by default, or "Center", "Top"…). A 3x version is added
+     when the source is large enough, for phones with dense screens. */ -}}
+{{- $src := .src -}}
+{{- $w := .width | default 320 -}}
+{{- $alt := .alt | default "" -}}
+{{- $loading := .loading | default "lazy" -}}
+{{- $res := resources.Get (strings.TrimPrefix "/" $src) -}}
+{{- /* Lanczos keeps the small text of screenshots crisp when they are scaled down */ -}}
+{{- if and $res (in (slice "image/jpeg" "image/png" "image/webp") $res.MediaType.Type) -}}
+  {{- $anchor := .anchor | default "Smart" -}}
+  {{- $sizes := slice 1 -}}
+  {{- range slice 2 3 }}{{ if ge $res.Width (mul $w .) }}{{ $sizes = $sizes | append . }}{{ end }}{{ end -}}
+  {{- $set := slice -}}
+  {{- $first := "" -}}
+  {{- $largest := "" -}}
+  {{- range $sizes -}}
+    {{- $px := int (mul $w .) -}}
+    {{- $q := cond (eq . 1) 88 84 -}}
+    {{- $img := "" -}}
+    {{- if and (eq $.fit "fill") $.height -}}
+      {{- $img = $res.Fill (printf "%dx%d webp q%d %s Lanczos" $px (int (mul $.height .)) $q $anchor) -}}
+    {{- else -}}
+      {{- $img = $res.Resize (printf "%dx webp q%d Lanczos" $px $q) -}}
+    {{- end -}}
+    {{- if eq . 1 }}{{ $first = $img }}{{ end -}}
+    {{- $largest = $img -}}
+    {{- $set = $set | append (printf "%s %dx" $img.RelPermalink .) -}}
+  {{- end -}}
+  {{- $two := $largest -}}
+  {{- if ge (len $sizes) 2 }}{{ $two = $res.Resize (printf "%dx webp q84 Lanczos" (int (mul $w 2))) }}{{ if and (eq .fit "fill") .height }}{{ $two = $res.Fill (printf "%dx%d webp q84 %s Lanczos" (int (mul $w 2)) (int (mul .height 2)) $anchor) }}{{ end }}{{ end -}}
+  <img src="{{ $two.RelPermalink }}" srcset="{{ delimit $set ", " }}" width="{{ $first.Width }}" height="{{ $first.Height }}" alt="{{ $alt }}"{{ with .class }} class="{{ . }}"{{ end }} loading="{{ $loading }}" decoding="async"{{ with .attrs }} {{ . | safeHTMLAttr }}{{ end }}>
+{{- else -}}
+  <img src="{{ $src }}" alt="{{ $alt }}"{{ with .width }} width="{{ . }}"{{ end }}{{ with .height }} height="{{ . }}"{{ end }}{{ with .class }} class="{{ . }}"{{ end }} loading="{{ $loading }}" decoding="async"{{ with .attrs }} {{ . | safeHTMLAttr }}{{ end }}>
+{{- end -}}

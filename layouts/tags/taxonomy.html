@@ -1,0 +1,8 @@
+{{ define "main" }}
+{{ partial "ui/page-header.html" (dict "title" (i18n "all_tags") "lede" (i18n "all_tags_lede")) }}
+<nav class="filter-list" aria-label="Tags">
+  {{ range $i, $t := site.Taxonomies.tags.ByCount }}
+  <a class="filter" href="{{ .Page.RelPermalink }}" data-reveal style="--i: {{ mod $i 6 }}">{{ .Page.Title }} <span class="filter-count">{{ .Count }}</span></a>
+  {{ end }}
+</nav>
+{{ end }}

@@ -1,0 +1,16 @@
+{{/* A place in the list under the map. Clicking it flies the map to the pin.
+     Params: .page (place page), .index (its position in the map data) */}}
+{{- $p := .page -}}
+{{- $colour := index hugo.Data.map.colours ($p.Params.category | default "default") | default hugo.Data.map.colours.default -}}
+<li data-place-item="{{ .index }}">
+  <button type="button" class="card card-link place-card" data-place="{{ .index }}">
+    <span class="filter-dot mt-2" style="background: {{ $colour | safeCSS }}" aria-hidden="true"></span>
+    <span class="min-w-0 flex-1">
+      <span class="place-card-name card-title">{{ $p.Title }}</span>
+      {{ with $p.Params.status }}{{ partial "map/status.html" . }}{{ end }}
+      <span class="place-card-meta">{{ partial "map/category-label.html" $p.Params.category }}{{ with $p.Params.city }} · {{ . }}{{ end }}</span>
+      {{ with $p.Params.address }}<span class="place-card-address">{{ . }}</span>{{ end }}
+    </span>
+    {{ partial "ui/icon.html" (dict "name" "pin" "class" "nudge mt-1") }}
+  </button>
+</li>

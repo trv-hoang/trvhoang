@@ -1,34 +1,20 @@
-<header class="space-y-4">
-  <div class="flex items-center gap-3 text-sm text-muted-foreground">
-    <div class="flex items-center gap-2">
-      <div class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center text-[10px] font-bold">
-        {{ slicestr (default "Viet Hoang" .Params.authorName) 0 1 | upper }}
-      </div>
-      <span class="font-medium text-foreground">{{ default "Viet Hoang" .Params.authorName }}</span>
-    </div>
-    <span>&middot;</span>
-    <time datetime="{{ .Date.Format "2006-01-02" }}">
-      {{ .Date.Format "January 2, 2006" }}
-    </time>
-    <span>&middot;</span>
-    <span>{{ .ReadingTime }} min read</span>
-  </div>
-  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
-    {{ .Title }}
-  </h1>
-  {{ if .Params.tags }}
-    <div class="flex flex-wrap gap-2 pt-4">
-      {{ range .Params.tags }}
-        <span class="text-xs font-medium px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full border border-amber-500/20">
-          {{ . }}
-        </span>
-      {{ end }}
-    </div>
+{{/* Title block of a blog post. Receives the post page. */}}
+<header class="mt-6 space-y-4">
+  <h1 class="text-[clamp(2rem,1.4rem+3vw,3rem)] font-bold leading-[1.1] tracking-tight" data-intro >{{ .Title }}</h1>
+  <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground" data-intro style="--i: 1">
+    <span class="font-medium text-foreground">{{ .Params.authorName | default site.Params.author.name }}</span>
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+    <span>{{ i18n "min_read" (dict "Count" .ReadingTime) }}</span>
+  </p>
+  {{ with .Params.tags }}
+  <ul class="chip-list" role="list" data-intro style="--i: 2">
+    {{ range . }}<li><a class="chip hover:text-foreground transition-colors" href="{{ "blog/" | relLangURL }}?tag={{ . | urlize }}">{{ . }}</a></li>{{ end }}
+  </ul>
   {{ end }}
 </header>
 
-{{ if .Params.coverImage }}
-  <div class="w-full h-64 sm:h-96 rounded-2xl overflow-hidden mt-8">
-    <img src="{{ .Params.coverImage }}" alt="{{ .Title }}" class="w-full h-full object-cover" />
-  </div>
+{{ with .Params.coverImage }}
+<figure class="mt-8 overflow-hidden rounded-2xl bg-muted aspect-video" data-intro style="--i: 3">
+  <img src="{{ . }}" alt="" class="size-full object-cover">
+</figure>
 {{ end }}

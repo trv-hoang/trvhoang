@@ -1,0 +1,19 @@
+{{/* Screenshots of a web app on its project page, in browser frames, scrolling
+     sideways. Each opens full size. Receives the project's `gallery:` list of
+     { src, caption } (src is a path in assets/). */}}
+<section class="gallery mt-10" aria-label="{{ i18n "screenshots" }}" data-reveal>
+  <ul class="gallery-track" role="list" tabindex="0">
+    {{ range . }}
+    {{ $full := "" }}{{ with resources.Get (strings.TrimPrefix "/" .src) }}{{ $full = (.Resize "2400x webp q86 Lanczos").RelPermalink }}{{ end }}
+    <li>
+      <figure>
+        <a class="browser" href="{{ $full | default .src }}" target="_blank" rel="noopener">
+          <span class="browser-bar" aria-hidden="true"><i></i><i></i><i></i></span>
+          {{ partial "ui/img.html" (dict "src" .src "width" 640 "alt" .caption) }}
+        </a>
+        {{ with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+      </figure>
+    </li>
+    {{ end }}
+  </ul>
+</section>

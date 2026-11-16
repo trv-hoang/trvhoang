@@ -1,28 +1,41 @@
 {{ define "main" }}
-<div class="py-16 space-y-12">
-  <!-- Header -->
-  <section class="reveal space-y-3">
-    <h1 class="text-3xl font-bold tracking-tight text-foreground">{{ .Title }}</h1>
-    <p class="text-muted-foreground max-w-xll">
-      {{ .Params.description }}
-    </p>
-  </section>
+{{- $projects := partial "projects/by-status.html" (where site.RegularPages "Type" "project") -}}
+{{- $featured := where $projects "Params.featured" true -}}
+{{- $rest := complement $featured $projects -}}
+{{- $kinds := hugo.Data.projects.kinds -}}
 
-  <!-- Project grid -->
-  <section class="reveal grid grid-cols-1 sm:grid-cols-2 gap-4">
-    {{ $projects := where .Site.RegularPages "Type" "project" }}
-    {{ $projects = sort $projects "Params.weight" }}
+{{ partial "ui/page-header.html" (dict "title" .Title "lede" .Params.description) }}
 
-    {{ if $projects }}
-      {{ range $projects }}
-        {{ partial "projects/project-card.html" . }}
-      {{ end }}
-    {{ else }}
-      <div class="col-span-full py-12 text-center text-muted-foreground border border-dashed border-border/50 rounded-2xl bg-card/10">
-        <p>No projects added yet.</p>
-        <p class="text-sm mt-2">Create markdown files in <code class="bg-muted px-1.5 py-0.5 rounded text-xs text-foreground">content/projects/</code></p>
-      </div>
-    {{ end }}
-  </section>
+<div class="filter-list mb-10" data-filter="projects" data-filter-param="kind" role="group" aria-label="{{ i18n "filter_projects" }}" data-intro style="--i: 2">
+  <button type="button" class="filter" data-filter-value="all" aria-pressed="true">{{ i18n "all" }} <span class="filter-count">{{ len $projects }}</span></button>
+  {{ range $kinds }}
+  {{- $n := len (where $projects "Params.kind" .id) -}}
+  {{ if $n }}<button type="button" class="filter" data-filter-value="{{ .id }}" aria-pressed="false">{{ i18n (printf "kind_%s" .id) | default .label }} <span class="filter-count">{{ $n }}</span></button>{{ end }}
+  {{ end }}
 </div>
+
+{{ with $featured }}
+<section aria-label="{{ i18n "featured_projects" }}" class="space-y-5" data-filter-section="projects">
+  {{ range $i, $p := . }}
+  <div data-filter-item="projects" data-filter-keys="{{ $p.Params.kind }}" data-reveal>
+    {{ partial "projects/featured-card.html" $p }}
+  </div>
+  {{ end }}
+</section>
+{{ end }}
+
+{{ with $rest }}
+<section class="mt-14" aria-labelledby="more-projects" data-filter-section="projects">
+  <h2 id="more-projects" class="section-heading">{{ i18n "more_projects" }}</h2>
+  <ul class="project-rows" role="list">
+    {{ range $i, $p := . }}
+    <li data-filter-item="projects" data-filter-keys="{{ $p.Params.kind }}" data-reveal style="--i: {{ mod $i 4 }}">
+      {{ partial "projects/project-row.html" $p }}
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
+
+{{ partial "ui/empty-state.html" (dict "mascot" "hiding" "title" (i18n "no_projects_group") "attrs" `data-filter-empty="projects" hidden`) }}
 {{ end }}

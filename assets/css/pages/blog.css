@@ -1,0 +1,61 @@
+/* ── Blog list ────────────────────────────────────────────────────── */
+
+.post-rows > li + li { border-top: 1px solid var(--border); }
+
+.post-row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: start;
+  padding: 1.25rem 0.75rem;
+  margin-inline: -0.75rem;
+  border-radius: 0.9rem;
+  transition: background-color var(--t-hover) ease;
+}
+.post-row:hover,
+.post-row:focus-visible { background: var(--card); }
+.post-row:hover .card-title,
+.post-row:focus-visible .card-title { color: var(--accent-text); }
+.post-row:hover .nudge,
+.post-row:focus-visible .nudge { color: var(--accent-text); transform: translateX(3px); }
+
+.post-row-date {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+.post-row-day {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  line-height: 1.1;
+}
+.post-row-arrow { margin-top: 0.35rem; }
+
+@media (max-width: 39.99rem) {
+  .post-row { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
+  .post-row-date { flex-direction: row; align-items: baseline; gap: 0.4rem; }
+  .post-row-day { font-size: 0.8125rem; font-weight: 400; color: var(--muted-foreground); letter-spacing: 0; }
+  .post-row-arrow { display: none; }
+}
+
+/* the cover placeholder for posts without a picture: the date, large */
+.post-card-placeholder-date {
+  font-size: clamp(2.5rem, 2rem + 3vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-align: center;
+}
+.post-card-placeholder-date small {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted-foreground);
+}

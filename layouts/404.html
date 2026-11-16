@@ -1,0 +1,9 @@
+{{ define "main" }}
+<div class="max-w-xl mx-auto py-8">
+  {{ partial "ui/empty-state.html" (dict
+    "mascot" "question"
+    "title" (i18n "not_found_title")
+    "text" (i18n "not_found_text")
+    "link" (dict "url" ("" | relLangURL) "label" (i18n "go_home"))) }}
+</div>
+{{ end }}

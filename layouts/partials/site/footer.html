@@ -1,0 +1,10 @@
+<footer class="site-footer">
+  <div class="container-page site-footer-inner">
+    <p>
+      &copy; {{ now.Format "2006" }}
+      <a class="font-medium text-foreground hover:text-accent-text transition-colors" href="/">{{ site.Params.author.name }}</a>.
+      {{ site.Params.tagline }}
+    </p>
+    {{ partial "ui/social-links.html" . }}
+  </div>
+</footer>

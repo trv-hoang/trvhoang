@@ -1,9 +1,159 @@
-baseURL = 'https://trvhoang.me/'
-languageCode = 'en-us'
+baseURL = 'https://trvhoang.pages.dev/'
 title = 'trvhoang'
 
+# English at the root (/), Vietnamese under /vi/.
+defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = false
+
 [params]
-  description = 'trvhoang — software engineer, coffee addict.'
-  ogImage = 'https://trvhoang.me/images/og-default.png'
-  # Cloudflare Web Analytics - replace with your token from the Cloudflare dashboard
+  # og:image: a path in assets/ (resized at build time) or a full URL
+  ogImage = 'images/avatar.jpg'
+  # Cloudflare Web Analytics token from the Cloudflare dashboard (loaded in production only)
   cloudflareAnalyticsToken = 'YOUR_TOKEN_HERE'
+
+  [params.author]
+    name = 'Trần Việt Hoàng'
+    email = 'trvhoang.net@gmail.com'
+
+  # One list of profiles, used by the footer, the About page and the Contact page.
+  [[params.socials]]
+    id = 'github'
+    label = 'GitHub'
+    handle = 'github.com/trv-hoang'
+    url = 'https://github.com/trv-hoang'
+  [[params.socials]]
+    id = 'linkedin'
+    label = 'LinkedIn'
+    handle = 'linkedin.com/in/trvhoag'
+    url = 'https://www.linkedin.com/in/trvhoag'
+  [[params.socials]]
+    id = 'facebook'
+    label = 'Facebook'
+    handle = 'facebook.com/trvhoag'
+    url = 'https://www.facebook.com/trvhoag'
+  [[params.socials]]
+    id = 'email'
+    label = 'Email'
+    handle = 'trvhoang.net@gmail.com'
+    url = 'mailto:trvhoang.net@gmail.com'
+
+  [params.map]
+    # Optional: other MapLibre style URLs for /map/. Empty uses the site's own
+    # styles in static/map/ (see data/map.yaml and npm run map:styles).
+    styleLight = ''
+    styleDark = ''
+
+[languages]
+  [languages.en]
+    label = 'English'
+    locale = 'en-us'
+    weight = 1
+    [languages.en.params]
+      description = 'Trần Việt Hoàng, software engineer in Hanoi and co-founder of Turing Factor. My projects, my writing, and a map of every place I have eaten.'
+      tagline = 'Be lost in sweet sensations.'
+      location = 'Hanoi, Vietnam'
+    [[languages.en.menus.main]]
+      identifier = 'about'
+      name = 'About'
+      url = '/'
+      weight = 1
+      [languages.en.menus.main.params]
+        match = ['/about/']
+    [[languages.en.menus.main]]
+      identifier = 'projects'
+      name = 'Projects'
+      url = '/projects/'
+      weight = 2
+      [languages.en.menus.main.params]
+        match = ['/project/']
+    [[languages.en.menus.main]]
+      identifier = 'blog'
+      name = 'Blog'
+      url = '/blog/'
+      weight = 3
+      [languages.en.menus.main.params]
+        match = ['/tags/']
+    [[languages.en.menus.main]]
+      identifier = 'map'
+      name = 'Map'
+      url = '/map/'
+      weight = 4
+    [[languages.en.menus.main]]
+      identifier = 'contact'
+      name = 'Contact'
+      url = '/contact/'
+      weight = 5
+
+  [languages.vi]
+    label = 'Tiếng Việt'
+    locale = 'vi'
+    weight = 2
+    [languages.vi.params]
+      description = 'Trần Việt Hoàng, kỹ sư phần mềm ở Hà Nội, đồng sáng lập Turing Factor. Dự án, bài viết, và bản đồ những quán tôi từng ăn.'
+      tagline = 'Be lost in sweet sensations.'
+      location = 'Hà Nội, Việt Nam'
+    [[languages.vi.menus.main]]
+      identifier = 'about'
+      name = 'Giới thiệu'
+      url = '/vi/'
+      weight = 1
+      [languages.vi.menus.main.params]
+        match = ['/vi/about/']
+    [[languages.vi.menus.main]]
+      identifier = 'projects'
+      name = 'Dự án'
+      url = '/vi/projects/'
+      weight = 2
+      [languages.vi.menus.main.params]
+        match = ['/vi/project/']
+    [[languages.vi.menus.main]]
+      identifier = 'blog'
+      name = 'Blog'
+      url = '/vi/blog/'
+      weight = 3
+      [languages.vi.menus.main.params]
+        match = ['/vi/tags/']
+    [[languages.vi.menus.main]]
+      identifier = 'map'
+      name = 'Bản đồ'
+      url = '/vi/map/'
+      weight = 4
+    [[languages.vi.menus.main]]
+      identifier = 'contact'
+      name = 'Liên hệ'
+      url = '/vi/contact/'
+      weight = 5
+
+# Places and blog posts are shared by both languages: those files are mounted
+# for every language site. Everything else is translated by file name
+# (page.md for English, page.vi.md for Vietnamese).
+[module]
+  [[module.mounts]]
+    source = 'content'
+    target = 'content'
+    files = ['! places/**', '! blog/**']
+  # the blog's section page is translated like any other page
+  [[module.mounts]]
+    source = 'content/blog'
+    target = 'content/blog'
+    files = ['_index*.md']
+  [[module.mounts]]
+    source = 'content/blog'
+    target = 'content/blog'
+    files = ['! _index*.md']
+    [module.mounts.sites.matrix]
+      languages = ['**']
+  [[module.mounts]]
+    source = 'content/places'
+    target = 'content/places'
+    [module.mounts.sites.matrix]
+      languages = ['**']
+
+# only tags; Hugo's default categories taxonomy is not used
+[taxonomies]
+  tag = 'tags'
+
+[markup]
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3

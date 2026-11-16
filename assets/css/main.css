@@ -1,0 +1,16 @@
+/* Entry point for the Tailwind CLI (see package.json). Output: static/global.css */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@source "../../layouts";
+@source "../js";
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./motion.css";
+@import "./components.css";
+@import "./prose.css";
+@import "./pages/projects.css";
+@import "./pages/blog.css";
+@import "./pages/map.css";
+@import "./pages/contact.css";

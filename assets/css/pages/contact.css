@@ -1,0 +1,69 @@
+/* ── Contact page ─────────────────────────────────────────────────── */
+
+.contact-layout {
+  display: grid;
+  gap: clamp(3rem, 8vw, 4rem);
+}
+@media (min-width: 56rem) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+  .contact-layout > section:first-child {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.contact-title {
+  font-size: clamp(2rem, 1.3rem + 3.6vw, 3.5rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.contact-email {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+/* the address itself is the biggest thing here; it wraps at the @ on small screens */
+.contact-email-address {
+  font-size: clamp(1.25rem, 0.9rem + 2vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--accent-text);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.06em;
+  transition: text-decoration-color var(--t-hover) ease;
+}
+.contact-email-address:hover { text-decoration-color: currentColor; }
+
+.copy-btn .copy-done { display: none; }
+.copy-btn[data-state="copied"] { color: var(--success); border-color: color-mix(in oklab, var(--success) 50%, var(--border)); }
+.copy-btn[data-state="copied"] .copy-icon { display: none; }
+.copy-btn[data-state="copied"] .copy-done { display: block; animation: intro-pop 360ms var(--ease-spring) both; }
+
+.contact-clock {
+  margin-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--muted-foreground);
+}
+.contact-clock time {
+  color: var(--foreground);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.topics > li + li { margin-top: 1rem; }
+.topics > li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+}

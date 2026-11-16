@@ -1,68 +1,38 @@
 {{ define "main" }}
-{{ $places := where .Site.RegularPages "Section" "places" }}
-{{ $places = sort $places "Date" "desc" }}
+{{/* Every place with coordinates, newest first. Each one is a file in content/places/
+     (add one with: npm run place:add -- "<Google Maps link>"). */}}
+{{- $places := where (where site.RegularPages "Section" "places") "Params.lat" "!=" nil -}}
+{{- $places = sort $places "Date" "desc" -}}
+{{- $cities := slice -}}
+{{- range $places }}{{ with .Params.city }}{{ $cities = $cities | append . }}{{ end }}{{ end -}}
+{{- $cities = $cities | uniq | sort -}}
+{{- $eat := len (where $places "Params.category" "in" (slice "restaurant" "food" "pastry")) -}}
+{{- $drink := len (where $places "Params.category" "in" (slice "cafe" "specialty coffee" "tea")) -}}
 
-{{/* Build normalized dict slice — used by JS, partials, and card grid */}}
-{{ $locs := slice }}
-{{ $cities := slice }}
-{{ $cats := slice }}
-{{ range $places }}
-  {{ $cat := .Params.category | default "food" }}
-  {{ $city := .Params.city | default "" }}
-  {{ $locs = $locs | append (dict
-    "name"     .Title
-    "lat"      .Params.lat
-    "lng"      .Params.lng
-    "category" $cat
-    "city"     $city
-    "address"  (.Params.address | default "")
-    "image"    (.Params.image | default "")
-    "link"     (.Params.link | default "")
-    "review"   (.Params.description | default .Summary)
-  ) }}
-  {{ if $city }}{{ $cities = $cities | append $city }}{{ end }}
-  {{ $cats = $cats | append $cat }}
-{{ end }}
+<header class="mb-8 sm:mb-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+  <div>
+    <h1 class="page-title" data-intro>{{ .Title }}</h1>
+    <p class="page-lede" data-intro style="--i: 1">{{ .Params.description }}</p>
+  </div>
+  <dl class="map-stats" data-intro style="--i: 2">
+    <div><dt>{{ i18n "places" }}</dt><dd>{{ len $places }}</dd></div>
+    <div><dt>{{ i18n "cities" }}</dt><dd>{{ len $cities }}</dd></div>
+    <div><dt>{{ i18n "to_eat" }}</dt><dd>{{ $eat }}</dd></div>
+    <div><dt>{{ i18n "to_drink" }}</dt><dd>{{ $drink }}</dd></div>
+  </dl>
+</header>
 
-{{ $locCount := len $locs }}
-{{ $cityCount := len ($cities | uniq) }}
+{{ partial "map/map.html" (dict "places" $places "cities" $cities) }}
 
-<div class="py-16 space-y-12 animate-fade-in">
-  <!-- Header -->
-  <section class="space-y-3">
-    <h1 class="text-3xl font-bold tracking-tight text-foreground">
-      {{ .Title }}
-    </h1>
-    <p class="text-muted-foreground">{{ .Params.description }}</p>
-    {{ with .Params.intro }}
-    <p class="text-sm text-muted-foreground italic leading-relaxed">{{ . }}</p>
-    {{ end }}
-    {{ if gt $locCount 0 }}
-    <p class="text-xs text-muted-foreground">
-      {{ $locCount }} {{ if eq $locCount 1 }}place{{ else }}places{{ end }}
-      {{ if gt $cityCount 0 }}<span class="mx-1 opacity-50">·</span>{{ $cityCount }} {{ if eq $cityCount 1 }}city{{ else }}cities{{ end }}{{ end }}
-    </p>
-    {{ end }}
-  </section>
-
-  {{ partial "map/map.html" (dict "locs" $locs "cities" ($cities | uniq) "cats" ($cats | uniq) "totalCount" $locCount) }}
-
-  <!-- Location Card Grid -->
-  {{ if gt $locCount 0 }}
-  <section class="space-y-6" id="places-grid-section">
-    <h2 class="flex items-center gap-2 text-lg font-semibold text-foreground">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-      All Places
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="places-grid">
-      {{ range $locs }}
-        {{ partial "map/location-card.html" . }}
-      {{ end }}
-    </div>
-    <p id="no-places-msg" class="hidden py-10 text-center text-sm text-muted-foreground border border-dashed border-border/40 rounded-2xl">
-      No places match the current filters.
-    </p>
-  </section>
-  {{ end }}
-</div>
+<section class="mt-12 scroll-mt-24" id="places" aria-labelledby="places-title">
+  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-5">
+    <h2 id="places-title" class="section-heading mb-0">{{ partial "ui/icon.html" (dict "name" "pin" "size" 20) }}<span>{{ i18n "all_places" }}</span></h2>
+    <p id="places-count" class="text-sm text-muted-foreground tabular-nums" aria-live="polite">{{ len $places }} places</p>
+  </div>
+  <ul class="places-grid" id="places-list" role="list">
+    {{ range $i, $p := $places }}{{ partial "map/place-card.html" (dict "page" $p "index" $i) }}{{ end }}
+  </ul>
+  {{ partial "ui/empty-state.html" (dict "mascot" "hiding" "title" (i18n "no_places_title") "text" (i18n "no_places_text") "attrs" `id="places-empty" hidden`) }}
+  <nav id="places-pages" class="pagination" aria-label="{{ i18n "pages_of_places" }}" hidden></nav>
+</section>
 {{ end }}

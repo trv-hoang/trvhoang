@@ -1,0 +1,2 @@
+{{- /* A place that is no longer open: "closed" or "temporarily closed" (i18n status_<name>). */ -}}
+<span class="place-status" data-status="{{ . }}">{{ i18n (printf "status_%s" (replace . " " "_")) | default (humanize .) }}</span>

@@ -1,0 +1,21 @@
+{{/* The newest post large, the rest as rows. Every entry is filterable by tag.
+     Receives a page collection, newest first. */}}
+{{- $pages := . -}}
+{{ if $pages }}
+{{- $first := index $pages 0 -}}
+<div data-filter-item="posts" data-filter-keys="{{ range $first.Params.tags }}{{ . | urlize }} {{ end }}" data-reveal>
+  {{ partial "blog/blog-card.html" (dict "page" $first "featured" true) }}
+</div>
+{{ with after 1 $pages }}
+<ul class="post-rows mt-8" role="list">
+  {{ range $i, $p := . }}
+  <li data-filter-item="posts" data-filter-keys="{{ range $p.Params.tags }}{{ . | urlize }} {{ end }}" data-reveal style="--i: {{ mod $i 4 }}">
+    {{ partial "blog/post-row.html" $p }}
+  </li>
+  {{ end }}
+</ul>
+{{ end }}
+{{ partial "ui/empty-state.html" (dict "mascot" "hiding" "title" (i18n "no_posts_tag") "attrs" `data-filter-empty="posts" hidden`) }}
+{{ else }}
+{{ partial "ui/empty-state.html" (dict "mascot" "sleeping" "title" (i18n "no_posts_title") "text" (i18n "no_posts_text")) }}
+{{ end }}

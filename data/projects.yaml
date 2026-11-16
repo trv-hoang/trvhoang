@@ -1,0 +1,15 @@
+# Groups for the /projects/ filter, in the order they are shown.
+# Each project sets `kind:` in its front matter to one of these ids.
+# Projects are listed by status in this order, then by weight. A status not
+# listed here comes last.
+statusOrder: ["Live", "In Progress", "In Design", "Completed", "Discontinued"]
+
+kinds:
+  - id: product
+    label: "Work & clients"
+  - id: turing
+    label: "Turing Factor"
+  - id: side
+    label: "Side projects"
+  - id: study
+    label: "University"

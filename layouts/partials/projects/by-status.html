@@ -1,0 +1,9 @@
+{{- /* Projects ordered by status (data/projects.yaml statusOrder), then weight.
+     Receives a list of project pages; returns the reordered list. */ -}}
+{{- $in := sort . "Params.weight" -}}
+{{- $out := slice -}}
+{{- range hugo.Data.projects.statusOrder -}}
+  {{- $out = $out | append (where $in "Params.status" .) -}}
+{{- end -}}
+{{- $out = $out | append (complement $out $in) -}}
+{{- return $out -}}

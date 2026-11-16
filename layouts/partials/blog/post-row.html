@@ -1,0 +1,16 @@
+{{/* One post in the list: date on the left, title and excerpt, reading time. Receives a post. */}}
+<a href="{{ .RelPermalink }}" class="post-row">
+  <time class="post-row-date" datetime="{{ .Date.Format "2006-01-02" }}">
+    <span class="post-row-day">{{ .Date.Format "02" }}</span>
+    <span>{{ .Date | time.Format "Jan 2006" }}</span>
+  </time>
+  <div class="min-w-0">
+    <h3 class="card-title text-lg leading-snug">{{ .Title }}</h3>
+    <p class="mt-1 text-muted-foreground line-clamp-2 max-w-[64ch]">{{ .Summary | plainify }}</p>
+    <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+      {{ partial "ui/chips.html" (first 3 (.Params.tags | default slice)) }}
+      <span class="text-sm text-muted-foreground">{{ i18n "min_read" (dict "Count" .ReadingTime) }}</span>
+    </div>
+  </div>
+  {{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge post-row-arrow") }}
+</a>

@@ -1,0 +1,70 @@
+{{/* What a visitor sees after clicking a pin. Receives one place page.
+     Edit this file to change the popup. Every line is optional except the title:
+     a field that is not set simply does not show.
+
+     Front matter it reads (content/places/<slug>.md):
+       title, category, city, address, lat, lng, link,
+       rating (1–5), description (your review), dishes (list), price, hours, visited (date),
+       status ("closed" or "temporarily closed", kept up to date by npm run place:sync)
+     Photos: every image in assets/images/places/<slug>/ (add with npm run place:photo). */}}
+{{- $p := . -}}
+{{- $slug := $p.File.ContentBaseName -}}
+{{- $colours := hugo.Data.map.colours -}}
+{{- $colour := index $colours ($p.Params.category | default "default") | default $colours.default -}}
+
+{{/* photos, resized and stripped of metadata (GPS included) at build time */}}
+{{- $photos := slice -}}
+{{- range first 6 (resources.Match (printf "images/places/%s/*" $slug)) -}}
+  {{- $photos = $photos | append (.Fill "640x360 webp q72 Smart") -}}
+{{- end -}}
+
+{{/* rating → label and fox */}}
+{{- $rating := $p.Params.rating -}}
+{{- $verdict := dict -}}
+{{- with $rating }}{{ $verdict = index hugo.Data.map.ratings (string .) | default dict }}{{ end -}}
+{{- $mascot := $verdict.mascot -}}
+{{- if and $mascot (ge (int ($rating | default 0)) 4) (in hugo.Data.map.sweet.categories $p.Params.category) }}{{ $mascot = hugo.Data.map.sweet.mascot }}{{ end -}}
+
+{{- $link := $p.Params.link -}}
+{{- if not $link -}}
+  {{- $link = printf "https://www.google.com/maps/search/?api=1&query=%s" (querify "q" (printf "%s %s" $p.Title ($p.Params.address | default "")) | strings.TrimPrefix "q=") -}}
+{{- end -}}
+{{- $directions := printf "https://www.google.com/maps/dir/?api=1&destination=%v,%v" $p.Params.lat $p.Params.lng -}}
+
+{{ with $photos }}
+<div class="map-popup-media">
+  <div class="map-popup-photos" tabindex="0" aria-label="{{ i18n "photos_of" (dict "Name" $p.Title) }}">
+    {{ range $i, $img := . }}<img src="{{ $img.RelPermalink }}" width="320" height="180" alt="{{ $p.Title }}, photo {{ add $i 1 }}" loading="lazy">{{ end }}
+  </div>
+  {{ if gt (len .) 1 }}<span class="map-popup-count">{{ i18n "photos_count" (dict "Count" (len .)) }}</span>{{ end }}
+</div>
+{{ end }}
+
+<div class="map-popup-body{{ if $mascot }} has-mascot{{ end }}{{ if $photos }} has-photo{{ end }}">
+  {{ with $mascot }}{{ partial "ui/mascot.html" (dict "name" . "size" 72 "class" "map-popup-mascot") }}{{ end }}
+
+  <span class="map-popup-cat"><span class="filter-dot" style="background: {{ $colour | safeCSS }}"></span>{{ partial "map/category-label.html" $p.Params.category }}{{ with $p.Params.city }} · {{ . }}{{ end }}</span>
+  <h3 class="map-popup-title">{{ $p.Title }}</h3>
+  {{ with $p.Params.status }}{{ partial "map/status.html" . }}{{ end }}
+  {{ with $p.Params.address }}<span class="map-popup-address">{{ . }}</span>{{ end }}
+
+  {{ with $verdict.label }}<span class="map-popup-verdict">{{ i18n (printf "rating_%v" $rating) | default . }} · {{ $rating }}/5</span>{{ end }}
+  {{ with $p.Params.description }}<p class="map-popup-review">{{ . }}</p>{{ end }}
+
+  {{ with $p.Params.dishes }}
+  <ul class="chip-list map-popup-dishes" role="list" aria-label="{{ i18n "worth_ordering" }}">{{ range . }}<li class="chip">{{ . }}</li>{{ end }}</ul>
+  {{ end }}
+
+  {{ if or $p.Params.price $p.Params.hours }}
+  <p class="map-popup-facts">
+    {{ with $p.Params.price }}<span>{{ . }}</span>{{ end }}
+    {{ with $p.Params.hours }}<span>{{ . }}</span>{{ end }}
+  </p>
+  {{ end }}
+  {{ with $p.Params.visited }}<p class="map-popup-visited">{{ i18n "last_visit" (dict "Date" (time.Format "January 2006" .)) }}</p>{{ end }}
+
+  <div class="map-popup-actions">
+    <a class="btn" href="{{ $directions }}" target="_blank" rel="noopener">{{ i18n "directions" }}</a>
+    <a class="btn-ghost" href="{{ $link }}" target="_blank" rel="noopener">{{ i18n "google_maps" }}</a>
+  </div>
+</div>

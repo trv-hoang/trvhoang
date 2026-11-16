@@ -1,0 +1,11 @@
+{{/* One of the fox mascots (assets/images/mascots/fox_<name>.png), resized to WebP at build time.
+     Usage: {{ partial "ui/mascot.html" (dict "name" "hiding" "size" 112 "class" "mx-auto") }}
+     Names: angry blink cheers cookie cool crying fixing happy headache hiding laptop love
+            money question question_1 sign sleeping surprising sweating thinking tired */}}
+{{- $size := .size | default 96 -}}
+{{- with resources.Get (printf "images/mascots/fox_%s.png" .name) -}}
+  {{- $img := .Resize (printf "%dx webp q82" (mul $size 2)) -}}
+  <img src="{{ $img.RelPermalink }}" width="{{ $size }}" height="{{ $size }}" alt="" loading="lazy" decoding="async"{{ with $.class }} class="{{ . }}"{{ end }}>
+{{- else -}}
+  {{- warnf "ui/mascot.html: no mascot named %q" .name -}}
+{{- end -}}

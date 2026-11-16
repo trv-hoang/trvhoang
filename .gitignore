@@ -5,13 +5,29 @@ resources/
 
 # Node dependencies
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Logs
 .dev_server.log
-logs
+logs/
 *.log
+
+# Local environment and secrets (API keys for map tiles, analytics…)
+.env
+.env.*
+!.env.example
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# AI and design tooling (local working files, screenshots, mockups)
+.superpowers/
+.taste-skill/
+.claude/settings.local.json
 
 # OS generated files
 .DS_Store

@@ -1,0 +1,108 @@
+/* ── Motion ───────────────────────────────────────────────────────────
+   Timing tokens, page transitions, entrances and the theme switch.
+   Content is never hidden unless JavaScript has run (html.js), and
+   every move has a reduced-motion fallback at the end of this file. */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --t-press: 120ms;
+  --t-hover: 180ms;
+  --t-ui: 260ms;
+  --t-reveal: 650ms;
+}
+
+/* ── Page transitions (cross-document View Transitions) ──────────── */
+@view-transition {
+  navigation: auto;
+}
+
+.site-nav { view-transition-name: site-nav; }
+.site-footer { view-transition-name: site-footer; }
+
+/* the nav does not cross-fade: only the new, live nav shows, so the pill's
+   slide (the script after the nav in partials/site/nav.html) plays inside it */
+::view-transition-old(site-nav) { animation: none; opacity: 0; }
+::view-transition-new(site-nav) { animation: none; }
+
+::view-transition-old(root) {
+  animation: vt-out 180ms var(--ease-in-out) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 320ms var(--ease-out) 60ms both;
+}
+
+@keyframes vt-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+/* the theme switch takes over the root transition with a circular wipe */
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.theme-switching::view-transition-new(root) {
+  animation: theme-wipe 560ms var(--ease-in-out) both;
+}
+@keyframes theme-wipe {
+  from { clip-path: circle(0 at var(--wipe-x, 100%) var(--wipe-y, 0%)); }
+  to { clip-path: circle(var(--wipe-r, 150vmax) at var(--wipe-x, 100%) var(--wipe-y, 0%)); }
+}
+
+/* ── Scroll reveal: [data-reveal], staggered by --i ──────────────── */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--t-reveal) var(--ease-out),
+    transform var(--t-reveal) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.js [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Page intro: [data-intro], plays once on load ─────────────────── */
+.js [data-intro] {
+  animation: intro-rise 700ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+}
+@keyframes intro-rise {
+  from { opacity: 0; transform: translateY(12px); }
+}
+.js [data-intro="pop"] {
+  animation-name: intro-pop;
+  animation-duration: 800ms;
+  animation-timing-function: var(--ease-spring);
+}
+@keyframes intro-pop {
+  from { opacity: 0; transform: scale(0.86); }
+}
+
+/* ── Press feedback ──────────────────────────────────────────────── */
+.press {
+  transition: transform var(--t-press) var(--ease-out);
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}

@@ -1,0 +1,3 @@
+{{- /* A place category in the page's language (i18n cat_<name>), e.g. "specialty coffee". */ -}}
+{{- $cat := . | default "food" -}}
+{{- i18n (printf "cat_%s" (replace $cat " " "_")) | default ($cat | humanize) -}}

@@ -1,0 +1,8 @@
+{{/* A wrapped row of tags. Usage: {{ partial "ui/chips.html" .Params.tags }} */}}
+{{- with . -}}
+<ul class="chip-list" role="list">
+  {{- range . }}
+  <li class="chip">{{ . }}</li>
+  {{- end }}
+</ul>
+{{- end -}}

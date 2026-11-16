@@ -161,3 +161,69 @@ weight: 3
 - `weight`: Dùng để **sắp xếp thứ tự** công ty hiển thị ngoài trang About. Số càng nhỏ càng nổi lên trên cùng (`weight: 1` sẽ đè lên `weight: 2`).
 - `url`: Tuân thủ cấu trúc `/about/work/[tên-công-ty]/` để Hugo ánh xạ đúng đường link SEO chuẩn mực.
 - Dưới hai vạch `---`, bạn viết chi tiết lịch sử làm việc bằng Markdown hệt như cách viết Blog ở **Chương 3**.
+
+## 6. Thêm và sửa địa điểm trên Map
+
+Mỗi địa điểm là một file trong `content/places/`. Không cần tự điền tọa độ hay địa chỉ:
+
+```bash
+# Trong app Google Maps: mở quán → Share → Copy link, rồi:
+npm run place:add -- "https://maps.app.goo.gl/xxxx"
+
+# Chọn loại và viết một dòng nhận xét ngay khi thêm (không bắt buộc):
+npm run place:add -- "https://maps.app.goo.gl/xxxx" --category cafe --description "Cà phê muối ngon nhất phố"
+```
+
+Lệnh tự tra tên, tọa độ chính xác, địa chỉ, thành phố và đoán loại quán, rồi tạo file `content/places/<ten-quan>.md`. Thêm `--dry-run` để xem trước mà chưa ghi file.
+
+Các trường trong file (chỉ `title`, `lat`, `lng` là bắt buộc):
+
+| Trường | Ý nghĩa |
+| --- | --- |
+| `category` | Một tên có trong `data/map.yaml` (quyết định màu ghim và bộ lọc): `restaurant`, `food`, `cafe`, `specialty coffee`, `tea`, `matcha`, `specialty tea`, `pastry`, `shop`, `mall`, `convenience store`, `landmark` (địa điểm nổi tiếng), `scenic` (cảnh đẹp) |
+| `city`, `address` | Hiện trên card và popup, dùng cho tìm kiếm |
+| `link` | Link Google Maps. Bỏ trống thì popup tự tạo link tìm kiếm theo tên và địa chỉ |
+| `description` | Một dòng nhận xét, hiện trong popup |
+| `status` | `closed` (đã đóng cửa) hoặc `temporarily closed` (tạm đóng cửa). `place:add` và `place:sync` tự điền theo Google; quán đóng cửa vẫn hiện trên map nhưng ghim mờ đi và không được "Hôm nay ăn gì?" gợi ý |
+| `rating` | 1–5. Hiện nhãn Must go / Good / Okay / Skip và một chú cáo theo mức độ (đổi trong `data/map.yaml`, mục `ratings`) |
+| `dishes`, `price`, `hours` | Món nên thử, mức giá, giờ mở cửa |
+| `visited` | Ngày ghé gần nhất, ví dụ `2026-03-14` |
+
+Ảnh tự chụp: thả vào `assets/images/places/<ten-quan>/` hoặc dùng lệnh dưới (iPhone HEIC tự chuyển sang JPEG). Khi build, Hugo thu nhỏ ảnh, chuyển sang WebP và xóa metadata (kể cả vị trí GPS). Ảnh hiện theo thứ tự tên file, ảnh đầu tiên đứng đầu popup.
+
+```bash
+npm run place:photo -- banh-gio-miss-beo ~/Downloads/IMG_1234.HEIC ~/Downloads/IMG_1235.HEIC
+```
+
+Đổi giao diện popup: sửa `layouts/partials/map/popup.html`. Thêm loại quán mới hoặc đổi màu: sửa `colours` trong `data/map.yaml`.
+
+Kiểm tra và sửa dữ liệu:
+
+```bash
+npm run place:check          # báo thiếu tọa độ, sai loại, trùng tên, nhiều quán chung một tọa độ…
+npm run place:sync           # tra lại mọi quán theo link và báo chỗ lệch (chưa ghi gì)
+npm run place:sync -- --write   # ghi lại tọa độ, địa chỉ, thành phố đúng
+```
+
+`place:add` và `place:sync` đọc trang Google Maps công khai của link, giống trình duyệt. Đây không phải API chính thức nên có thể thay đổi; khi không tra được, lệnh dùng thông tin có sẵn trong link và báo cho bạn.
+
+Bản đồ là MapLibre với dữ liệu OpenStreetMap từ OpenFreeMap: phủ toàn cầu, miễn phí, không cần key, không logo. Hai style sáng/tối nằm ở `static/map/` và được sinh bằng:
+
+```bash
+npm run map:styles   # đổi màu trong scripts/map-styles.mjs rồi chạy lại
+```
+
+Muốn dùng nhà cung cấp khác (MapTiler, Mapbox…), điền URL style của họ vào `params.map.styleLight` và `params.map.styleDark` trong `hugo.toml`.
+
+## 7. Song ngữ Anh – Việt
+
+Tiếng Anh ở `/`, tiếng Việt ở `/vi/`. Nút **EN / VI** trên thanh điều hướng mở đúng trang tương ứng ở ngôn ngữ kia (hoặc trang chủ nếu trang đó chưa có bản dịch).
+
+- **Dịch một trang:** tạo file cùng tên với đuôi `.vi.md` cạnh file gốc, ví dụ `content/project/q-booking.md` → `content/project/q-booking.vi.md`. Front matter giữ nguyên các trường kỹ thuật (`type`, `weight`, `tags`, link…), chỉ dịch chữ. Với trang Work, đặt `url` có tiền tố `/vi/`.
+- **Dùng chung, không cần dịch:** địa điểm (`content/places/`) và bài blog (`content/blog/`) hiện ở cả hai ngôn ngữ (cấu hình `[module]` trong `hugo.toml`). Giới thiệu của mục Blog thì dịch trong `content/blog/_index.vi.md`.
+- **Chữ trên giao diện** (nút, nhãn, thông báo, cả chữ do JavaScript tạo): `i18n/en.yaml` và `i18n/vi.yaml`. Thêm khóa mới vào cả hai file.
+- **Menu, khẩu hiệu, mô tả site:** mục `[languages.en]` và `[languages.vi]` trong `hugo.toml`.
+
+## 8. "Surprise me" trên bản đồ
+
+Nút chỉ gợi ý các quán bạn chấm `rating: 4` hoặc `5` (trong bộ lọc đang chọn). Nếu người xem cho phép lấy vị trí, nó chọn ngẫu nhiên trong 5 quán như vậy gần họ nhất và ghi khoảng cách; nếu không, chọn ngẫu nhiên trong tất cả quán 4–5 sao. Khi chưa có quán nào được chấm 4–5, nó tạm chọn trong mọi quán và ghi rõ điều đó.

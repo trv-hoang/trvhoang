@@ -1,0 +1,9 @@
+{{/* A fox and a short message for when a list has nothing to show.
+     Usage: {{ partial "ui/empty-state.html" (dict "mascot" "hiding" "title" "…" "text" "…" "attrs" `id="x" hidden`) }}
+     `attrs` is optional raw attributes (ids, data-*, hidden) for scripts that toggle it. */}}
+<div class="empty-state" {{ with .attrs }}{{ . | safeHTMLAttr }}{{ end }}>
+  {{ partial "ui/mascot.html" (dict "name" (.mascot | default "hiding") "size" 112 "class" "empty-state-fox") }}
+  <p class="empty-state-title">{{ .title }}</p>
+  {{ with .text }}<p class="empty-state-text">{{ . }}</p>{{ end }}
+  {{ with .link }}<a class="btn-ghost mt-3" href="{{ .url }}">{{ .label }}</a>{{ end }}
+</div>

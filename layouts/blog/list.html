@@ -1,33 +1,5 @@
 {{ define "main" }}
-<div class="py-16 space-y-10">
-  <!-- Header -->
-  <section class="reveal space-y-4">
-    <h1 class="text-3xl font-bold tracking-tight text-foreground">{{ .Title }}</h1>
-    <p class="text-muted-foreground max-w-xl">
-      {{ .Params.description }}
-    </p>
-
-    <!-- Tag filters -->
-    {{ partial "blog/tag-filters.html" (dict "site" .Site "activeTag" "all") }}
-  </section>
-
-  {{ $pages := where .Site.RegularPages "Type" "blog" }} {{ $len := len $pages
-  }} {{ if gt $len 0 }}
-
-  <!-- Featured post (the first one) -->
-  <div class="reveal">
-  {{ $featured := index $pages 0 }} {{ partial "blog/blog-card.html" (dict "page"
-  $featured "featured" true) }}
-  </div>
-
-  <!-- Post grid (the rest) -->
-  {{ if gt $len 1 }}
-  <div class="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-    {{ range after 1 $pages }} {{ partial "blog/blog-card.html" (dict "page" .
-    "featured" false) }} {{ end }}
-  </div>
-  {{ end }} {{ else }}
-  <p class="text-sm text-muted-foreground">No posts found yet.</p>
-  {{ end }}
-</div>
+{{ partial "ui/page-header.html" (dict "title" .Title "lede" .Params.description) }}
+{{ partial "blog/tag-filters.html" (dict "activeTag" "all") }}
+{{ partial "blog/post-list.html" (where site.RegularPages "Type" "blog").ByDate.Reverse }}
 {{ end }}

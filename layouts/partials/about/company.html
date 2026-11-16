@@ -1,0 +1,29 @@
+{{/* The company on the About page: who we are, my role, and its products.
+     Receives the `company:` block of content/_index.md (name, role, period,
+     about, products as project slugs, also). */}}
+{{- $c := . -}}
+<div class="card company-card" data-reveal>
+  <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-x-4">
+    <h3 class="font-medium">{{ $c.role }}</h3>
+    <p class="text-sm text-muted-foreground tabular-nums shrink-0">{{ $c.period }}</p>
+  </div>
+  {{ with $c.about }}<p class="mt-2 text-muted-foreground leading-relaxed max-w-[68ch]">{{ . }}</p>{{ end }}
+
+  <ul class="company-products" role="list">
+    {{ range $i, $slug := $c.products }}
+    {{ with site.GetPage (printf "/project/%s" $slug) }}
+    <li data-reveal style="--i: {{ $i }}">
+      <a href="{{ .RelPermalink }}" class="company-product">
+        <span class="flex items-start justify-between gap-2">
+          <span class="card-title">{{ .Title }}</span>
+          {{ partial "ui/status-badge.html" .Params.status }}
+        </span>
+        <span class="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">{{ .Params.description }}</span>
+        <span class="link-arrow mt-auto pt-3 text-sm font-medium">{{ i18n "read_case_study" }} {{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge") }}</span>
+      </a>
+    </li>
+    {{ end }}
+    {{ end }}
+  </ul>
+  {{ with $c.also }}<p class="mt-4 text-sm text-muted-foreground">{{ . }}</p>{{ end }}
+</div>

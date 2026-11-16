@@ -1,0 +1,3 @@
+{{- /* The readable name of a project kind, from data/projects.yaml. */ -}}
+{{- $id := . -}}
+{{- range hugo.Data.projects.kinds }}{{ if eq .id $id }}{{ i18n (printf "kind_%s" .id) | default .label }}{{ end }}{{ end -}}

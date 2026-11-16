@@ -1,0 +1,5 @@
+{{/* Usage: {{ partial "ui/section-heading.html" (dict "icon" "briefcase" "title" "Work history" "id" "work") }} */}}
+<h2 class="section-heading"{{ with .id }} id="{{ . }}"{{ end }}>
+  {{- with .icon }}{{ partial "ui/icon.html" (dict "name" . "size" 20) }}{{ end }}
+  <span>{{ .title }}</span>
+</h2>

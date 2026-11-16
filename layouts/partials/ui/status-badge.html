@@ -1,0 +1,5 @@
+{{/* Project status: "Live", "Completed", "In Progress" or anything else.
+     Usage: {{ partial "ui/status-badge.html" .Params.status }} */}}
+{{- with . -}}
+<span class="badge" data-status="{{ . | lower | urlize }}">{{ . }}</span>
+{{- end -}}

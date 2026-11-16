@@ -1,0 +1,50 @@
+{{- $title := cond .IsHome (printf "%s · %s" site.Params.author.name site.Title) (printf "%s · %s" .Title site.Title) -}}
+{{- $description := .Params.description | default .Summary | default site.Params.description | plainify | truncate 160 -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ .Permalink }}">
+{{- range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- end }}
+<meta name="theme-color" content="#0c0a09">
+
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+{{- with site.Params.ogImage }}
+  {{- with resources.Get . }}
+<meta property="og:image" content="{{ (.Fill "600x600 jpg q80 Smart").Permalink }}">
+  {{- else }}
+<meta property="og:image" content="{{ . | absURL }}">
+  {{- end }}
+{{- end }}
+<meta name="twitter:card" content="summary_large_image">
+
+{{/* Theme before first paint: saved choice, else the system setting. */}}
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add("js");
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) {}
+    // ?theme=light|dark previews a theme without saving it
+    var asked = new URLSearchParams(location.search).get("theme");
+    if (asked === "light" || asked === "dark") saved = asked;
+    var dark = saved ? saved === "dark" : !matchMedia("(prefers-color-scheme: light)").matches;
+    root.classList.toggle("dark", dark);
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", dark ? "#0c0a09" : "#f5f5f4");
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+
+{{/* Built by the Tailwind CLI from assets/css/main.css (npm run dev / build). */}}
+{{- $cssVersion := "" -}}
+{{- if fileExists "static/global.css" }}{{ $cssVersion = readFile "static/global.css" | md5 | truncate 8 "" }}{{ end -}}
+<link rel="stylesheet" href="{{ "global.css" | relURL }}?v={{ $cssVersion }}">

@@ -4,8 +4,13 @@
   "scripts": {
     "dev": "npx concurrently \"npm run dev:hugo\" \"npm run dev:tailwind\"",
     "dev:hugo": "hugo server -D -p 1315",
-    "dev:tailwind": "npx @tailwindcss/cli -i ./assets/css/global.css -o ./static/global.css --watch",
-    "build": "npx @tailwindcss/cli -i ./assets/css/global.css -o ./static/global.css --minify && hugo --gc --minify"
+    "dev:tailwind": "npx @tailwindcss/cli -i ./assets/css/main.css -o ./static/global.css --watch",
+    "build": "npx @tailwindcss/cli -i ./assets/css/main.css -o ./static/global.css --minify && hugo --gc --minify",
+    "place:add": "node scripts/places.mjs add",
+    "place:check": "node scripts/places.mjs check",
+    "place:sync": "node scripts/places.mjs sync",
+    "map:styles": "node scripts/map-styles.mjs",
+    "place:photo": "node scripts/places.mjs photo"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

@@ -1,0 +1,86 @@
+{{/* Floating navigation. Items come from [menus] in hugo.toml; an item's
+     params.match lists extra path prefixes that count as "inside" it
+     (project pages live under /project/, work pages under /about/work/). */}}
+{{- $here := .RelPermalink -}}
+{{- $current := "" -}}
+{{- range site.Menus.main -}}
+  {{- $item := . -}}
+  {{- if or (and (eq .URL "/") (eq $here "/")) (and (ne .URL "/") (strings.HasPrefix $here .URL)) }}{{ $current = $item.Identifier }}{{ end -}}
+  {{- range .Params.match }}{{ if strings.HasPrefix $here . }}{{ $current = $item.Identifier }}{{ end }}{{ end -}}
+{{- end -}}
+
+<div class="site-nav-wrap">
+  <nav class="site-nav" aria-label="{{ i18n "nav_main" }}">
+    <div class="nav-desktop">
+      {{- range site.Menus.main }}
+      {{- $active := eq .Identifier $current }}
+      <a class="nav-link" href="{{ .URL }}"{{ if $active }} aria-current="page"{{ end }}>
+        {{ if $active }}<span class="nav-pill" aria-hidden="true"></span>{{ end }}
+        <span>{{ .Name }}</span>
+      </a>
+      {{- end }}
+    </div>
+
+    <div class="nav-mobile">
+      {{- $label := i18n "menu" -}}
+      {{- range site.Menus.main }}{{ if eq .Identifier $current }}{{ $label = .Name }}{{ end }}{{ end }}
+      <span class="mobile-current">{{ $label }}</span>
+      <button class="nav-icon-btn" type="button" data-menu-button aria-controls="mobile-menu" aria-expanded="false" aria-label="{{ i18n "menu_open" }}">
+        <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+
+    <span class="nav-divider" aria-hidden="true"></span>
+
+    {{/* the same page in the other language, or that language's home page */}}
+    {{- $switch := "" -}}
+    {{- range .Translations }}{{ $switch = .RelPermalink }}{{ end -}}
+    {{- if not $switch }}{{ range site.Home.Translations }}{{ $switch = .RelPermalink }}{{ end }}{{ end -}}
+    {{ with $switch }}
+    <a class="nav-icon-btn nav-lang" href="{{ . }}" hreflang="{{ cond (eq site.Language.Lang "en") "vi" "en" }}" aria-label="{{ i18n "language_switch" }}" title="{{ i18n "language_switch" }}">{{ i18n "language_short" }}</a>
+    {{ end }}
+
+    <button class="nav-icon-btn theme-toggle" type="button" data-theme-toggle aria-label="{{ i18n "theme_toggle" }}">
+      {{ partial "ui/icon.html" (dict "name" "sun" "class" "theme-icon theme-icon-sun") }}
+      {{ partial "ui/icon.html" (dict "name" "moon" "class" "theme-icon theme-icon-moon") }}
+    </button>
+  </nav>
+  {{/* Slide the pill from where it was on the previous page. Runs before the
+       first paint, so the pill never flashes at its new place first, and it
+       works with or without cross-document view transitions. */}}
+  <script>
+    (function () {
+      try {
+        var key = "nav-pill-from";
+        var bar = document.currentScript.previousElementSibling.querySelector(".nav-desktop");
+        var at = function () {
+          var pill = bar && bar.querySelector(".nav-pill");
+          if (!pill || getComputedStyle(bar).display === "none") return null;
+          var b = bar.getBoundingClientRect(), r = pill.getBoundingClientRect();
+          return { pill: pill, x: r.left - b.left, w: r.width };
+        };
+        addEventListener("pagehide", function () {
+          var now = at();
+          if (now) sessionStorage.setItem(key, JSON.stringify({ x: now.x, w: now.w, t: Date.now() }));
+        });
+        var saved = sessionStorage.getItem(key);
+        sessionStorage.removeItem(key);
+        if (!saved || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var from = JSON.parse(saved), to = at();
+        if (!to || Date.now() - from.t > 5000) return;
+        var dx = from.x - to.x;
+        if (Math.abs(dx) < 1 && Math.abs(from.w - to.w) < 1) return;
+        to.pill.animate(
+          [{ transform: "translateX(" + dx + "px)", width: from.w + "px" }, { transform: "none", width: to.w + "px" }],
+          { duration: 420, easing: "cubic-bezier(0.34, 1.4, 0.64, 1)" }
+        );
+      } catch (e) {}
+    })();
+  </script>
+
+  <div class="mobile-menu" id="mobile-menu" data-open="false">
+    {{- range $i, $item := site.Menus.main }}
+    <a href="{{ .URL }}" style="--i: {{ $i }}"{{ if eq .Identifier $current }} aria-current="page"{{ end }}>{{ .Name }}</a>
+    {{- end }}
+  </div>
+</div>

@@ -1,0 +1,93 @@
+/* ── Long-form content (Markdown) ─────────────────────────────────────
+   Use class="prose content" everywhere. The typography plugin's colours
+   are pointed at our tokens, so one class works in both themes; never
+   hard-code prose-invert. */
+
+.content {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--accent-text);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--accent);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: #e7e5e4;
+  --tw-prose-pre-bg: #1c1917;
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+
+  max-width: 68ch;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+@media (min-width: 40rem) {
+  .content { font-size: 1.0625rem; }
+}
+
+.content a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.08em;
+  transition: color var(--t-hover) ease;
+}
+.content a:hover { color: var(--foreground); }
+.content :where(code):not(:where(pre *)) {
+  background: var(--muted);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.35rem;
+  font-weight: 500;
+}
+.content :where(code):not(:where(pre *))::before,
+.content :where(code):not(:where(pre *))::after { content: none; }
+.content pre { overflow-x: auto; max-width: 100%; }
+.content img { border-radius: 0.75rem; }
+.content table { display: block; overflow-x: auto; }
+/* list items are often a bold lead plus a sentence or two: give each room to breathe */
+.content :where(ul, ol) > li { margin-block: 0.9em; padding-inline-start: 0.4em; }
+.content :where(h2, h3) + :where(ul, ol) { margin-top: 1em; }
+
+/* table of contents in the blog sidebar */
+.toc nav ul { list-style: none; margin: 0; padding: 0; }
+.toc nav ul ul { padding-left: 0.85rem; }
+.toc nav li { margin: 0.4rem 0; }
+.toc nav a {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  transition: color var(--t-hover) ease;
+}
+.toc nav a:hover { color: var(--foreground); }
+
+/* "What I built" style lists, where every item opens with a bold lead:
+   each item becomes a card, the lead its title, in two columns when there is room */
+.content ul:has(> li > strong:first-child) {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25em;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .content ul:has(> li > strong:first-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.content ul:has(> li > strong:first-child) > li {
+  margin: 0;
+  padding: 1rem 1.15rem 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--card);
+  color: var(--muted-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+.content ul:has(> li > strong:first-child) > li::marker { content: none; }
+.content ul:has(> li > strong:first-child) > li > strong:first-child {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.4;
+}

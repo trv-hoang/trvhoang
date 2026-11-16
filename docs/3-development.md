@@ -59,4 +59,4 @@ Mô hình tốt nhất cho giao diện tĩnh dạng này hiện tại là **Clou
 - Build output directory: `public`
 - Node Version: Mặc định ở Settings cấu hình là Node.js v20+
 
-Mỗi khi bạn `git push` một bài Blog mới (dưới dạng file Markdown) lên Github nhánh `main`, Cloudflare sẽ tự bắt tín hiệu tải Hugo về và Build HTML chạy thẳng lên tên miền `trvhoang.me` của bạn trong đúng vài chục giây mà thôi! 🚀
+Mỗi khi bạn `git push` một bài Blog mới (dưới dạng file Markdown) lên Github nhánh `main`, Cloudflare sẽ tự bắt tín hiệu tải Hugo về và Build HTML chạy thẳng lên tên miền `trvhoang.pages.dev` của bạn trong đúng vài chục giây mà thôi! 🚀

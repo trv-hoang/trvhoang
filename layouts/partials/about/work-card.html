@@ -1,60 +1,29 @@
-<a href="{{ .RelPermalink }}" class="block rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-5 transition-all duration-200 hover:border-border hover:bg-card/60 hover:backdrop-blur-md cursor-pointer group">
-  <div class="space-y-4">
-    <!-- Company Header -->
-    <div class="flex items-start justify-between gap-4">
-      <div class="flex items-center gap-3">
-        {{ if .Params.logo }}
-        <img src="{{ .Params.logo }}" alt="{{ .Params.company }}" class="w-10 h-10 rounded-md shrink-0 border border-border/40 object-contain bg-muted" />
-        {{ else }}
-        <div class="w-10 h-10 rounded-md bg-muted flex items-center justify-center shrink-0 border border-border/40">
-          <span class="text-lg font-bold text-muted-foreground">{{ slicestr .Params.company 0 1 | upper }}</span>
-        </div>
-        {{ end }}
-        <div>
-          <h3 class="font-bold text-foreground text-lg group-hover:text-amber-400 transition-colors">{{ .Params.company }}</h3>
-          <span class="text-sm text-muted-foreground">{{ if .Params.location }}{{ .Params.location }}{{ end }}</span>
-        </div>
-      </div>
-      <!-- External Link Icon (shows on hover) -->
-      <div class="flex items-center gap-2 mt-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-muted-foreground opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-amber-400 flex-shrink-0"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </div>
-    </div>
-
-    <!-- Career Timeline -->
-    {{ if .Params.roles }}
-      <div class="pl-4 border-l-2 border-border/40 ml-1 mt-4 space-y-5 relative">
-        {{ range .Params.roles }}
-          <div class="relative">
-            <!-- Timeline Node Dot -->
-            <span class="absolute -left-[23px] top-2 w-2 h-2 rounded-full bg-border group-hover:bg-amber-400 transition-colors duration-200"></span>
-            
-            <div class="space-y-1">
-              <h4 class="font-medium text-foreground text-[15px]">{{ .title }}</h4>
-              <p class="text-xs text-muted-foreground">{{ .period }}</p>
-              {{ if .description }}
-                <p class="text-sm text-muted-foreground leading-relaxed pt-1.5">{{ .description }}</p>
-              {{ end }}
-            </div>
-          </div>
-        {{ end }}
-      </div>
+{{/* One employer on the About page, with its roles. Receives a work page. */}}
+<a href="{{ .RelPermalink }}" class="card card-link">
+  <div class="flex items-start gap-3">
+    {{ if .Params.logo }}
+    {{ partial "ui/img.html" (dict "src" .Params.logo "width" 40 "class" "size-10 rounded-lg object-contain bg-muted shrink-0") }}
     {{ else }}
-      <!-- Fallback for older structure (Single Role) -->
-      <div class="space-y-1 mt-2">
-        <h4 class="font-medium text-foreground text-[15px] group-hover:text-amber-400 transition-colors">{{ .Params.role }}</h4>
-        <p class="text-xs text-muted-foreground">{{ .Params.period }}</p>
-        <p class="text-sm text-muted-foreground pt-1.5">{{ .Params.description }}</p>
-      </div>
+    <span class="size-10 rounded-lg bg-muted grid place-items-center font-bold text-muted-foreground shrink-0" aria-hidden="true">{{ slicestr .Params.company 0 1 | upper }}</span>
     {{ end }}
-    
-    <!-- Tags -->
-    <div class="flex items-center justify-between gap-4 flex-wrap pt-2">
-      <div class="flex flex-wrap gap-1.5">
-        {{ range .Params.tags }}
-        <span class="inline-flex items-center rounded-md bg-muted px-2 py-1 text-xs font-medium text-muted-foreground ring-1 ring-inset ring-border/40">{{ . }}</span>
-        {{ end }}
-      </div>
+    <div class="min-w-0 flex-1">
+      <h3 class="card-title text-lg leading-snug">{{ .Params.company }}</h3>
+      {{ with .Params.location }}<p class="text-sm text-muted-foreground">{{ . }}</p>{{ end }}
     </div>
+    {{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge mt-1.5") }}
   </div>
+
+  <div class="mt-4 space-y-4">
+    {{ range .Params.roles }}
+    <div>
+      <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-x-4">
+        <h4 class="font-medium">{{ .title }}</h4>
+        <p class="text-sm text-muted-foreground tabular-nums shrink-0">{{ .period }}</p>
+      </div>
+      {{ with .description }}<p class="mt-1.5 text-base text-muted-foreground max-w-[68ch]">{{ . }}</p>{{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  {{ with .Params.tags }}<div class="mt-4">{{ partial "ui/chips.html" . }}</div>{{ end }}
 </a>

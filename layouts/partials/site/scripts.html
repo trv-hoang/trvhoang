@@ -1,0 +1,17 @@
+{{/* One bundle for every page: assets/js/main.js and its modules. */}}
+{{/* interface text for the scripts, in the page's language (i18n/*.yaml, keys js_*) */}}
+{{- $strings := dict -}}
+{{- range $key := slice "places_range" "places_one" "places_none" "previous" "next" "previous_page" "next_page" "page" "surprise" "surprise_near" "surprise_unrated" "locating" "copied" "menu_open" "menu_close" "find_me" "location_unavailable" "you_are_here" "locate_denied" "locate_unavailable" "locate_timeout" "close" "screenshots" -}}
+  {{- $strings = merge $strings (dict $key (i18n (printf "js_%s" $key))) -}}
+{{- end -}}
+<script id="i18n" type="application/json">{{ $strings | jsonify | safeJS }}</script>
+{{- $opts := dict "target" "es2020" "format" "esm" -}}
+{{- $js := resources.Get "js/main.js" | js.Build $opts -}}
+{{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ end -}}
+<script type="module" src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }}></script>
+
+{{- with site.Params.cloudflareAnalyticsToken }}
+{{- if and hugo.IsProduction (ne . "YOUR_TOKEN_HERE") }}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ . }}"}'></script>
+{{- end }}
+{{- end }}

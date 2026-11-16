@@ -1,0 +1,8 @@
+{{ define "main" }}
+{{ partial "ui/page-header.html" (dict "title" .Title "lede" .Params.description) }}
+<ul class="space-y-3" role="list">
+  {{ range .Pages }}
+  <li><a class="card card-link flex items-center justify-between gap-3" href="{{ .RelPermalink }}"><span class="card-title">{{ .Title }}</span>{{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge") }}</a></li>
+  {{ end }}
+</ul>
+{{ end }}

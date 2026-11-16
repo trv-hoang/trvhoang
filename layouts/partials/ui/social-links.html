@@ -1,0 +1,8 @@
+{{/* Round icon links for every profile in params.socials (hugo.toml). */}}
+<div class="social-links">
+  {{- range site.Params.socials }}
+  <a class="social-link" data-brand="{{ .id }}" href="{{ .url }}" aria-label="{{ .label }}"{{ if not (strings.HasPrefix .url "mailto:") }} target="_blank" rel="noopener noreferrer"{{ end }}>
+    {{ partial "ui/icon.html" (dict "name" .id "size" 18) }}
+  </a>
+  {{- end }}
+</div>

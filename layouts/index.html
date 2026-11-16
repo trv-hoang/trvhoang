@@ -1,30 +1,111 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>trvhoang — Viet Hoang</title>
-    <meta name="description" content="Personal website of Viet Hoang — software engineer, explorer.">
-    <meta property="og:type"        content="website">
-    <meta property="og:url"         content="https://trvhoang.me/">
-    <meta property="og:title"       content="trvhoang — Viet Hoang">
-    <meta property="og:description" content="Personal website of Viet Hoang — software engineer, coffee addict.">
-    <meta property="og:site_name"   content="trvhoang">
-    <meta http-equiv="refresh" content="0; url=/about/" />
-    <link rel="canonical" href="/about/" />
-    <script>
-      window.location.replace("/about/");
-    </script>
-  </head>
-  <body
-    style="
-      background-color: #09090b;
-      color: #fafafa;
-      font-family: sans-serif;
-      text-align: center;
-      padding-top: 5rem;
-    "
-  >
-    If you are not redirected automatically,
-    <a href="/about/" style="color: #3b82f6">click here</a>.
-  </body>
-</html>
+{{ define "main" }}
+<div class="stack-section">
+  {{/* ── Intro: plays once on load ─────────────────────────────── */}}
+  <section class="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8" aria-labelledby="intro-title">
+    {{ partial "ui/img.html" (dict "src" "images/avatar.jpg" "width" 112 "height" 112 "fit" "fill" "anchor" "Center" "alt" site.Params.author.name "loading" "eager" "attrs" `fetchpriority="high" data-intro="pop"`
+      "class" "size-24 sm:size-28 rounded-full object-cover ring-1 ring-border shrink-0 bg-muted") }}
+
+    <div class="min-w-0 space-y-3">
+      <div>
+        <h1 id="intro-title" class="page-title" data-intro style="--i: 1">{{ site.Params.author.name }}</h1>
+        <p class="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-muted-foreground" data-intro style="--i: 2">
+          {{ partial "ui/icon.html" "pin" }}
+          <span>{{ .Params.location | default site.Params.location }}</span>
+          {{ with .Params.role }}<span aria-hidden="true">/</span><span>{{ . }}</span>{{ end }}
+        </p>
+      </div>
+      <p class="max-w-xl text-foreground/90" data-intro style="--i: 3">{{ .Params.description }}</p>
+      <ul class="flex flex-wrap gap-2 pt-1" role="list" data-intro style="--i: 4">
+        {{- range site.Params.socials }}
+        <li>
+          <a class="btn-ghost brand-btn" data-brand="{{ .id }}" href="{{ .url }}"{{ if not (strings.HasPrefix .url "mailto:") }} target="_blank" rel="noopener noreferrer"{{ end }}>
+            {{ partial "ui/icon.html" .id }}<span>{{ .label }}</span>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+  </section>
+
+  {{ with .Content }}
+  <section class="prose content" data-reveal>{{ . }}</section>
+  {{ end }}
+
+  {{/* ── Work history ──────────────────────────────────────────── */}}
+  <section aria-labelledby="work">
+    {{ partial "ui/section-heading.html" (dict "icon" "briefcase" "title" (i18n "work_history") "id" "work") }}
+    <ol class="timeline" role="list">
+      {{ range $i, $job := sort (where site.RegularPages "Type" "work") "Params.weight" }}
+      <li class="timeline-item" data-reveal style="--i: {{ $i }}">
+        {{ partial "about/work-card.html" $job }}
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+
+  {{/* ── The company I co-founded and the products it sells ────── */}}
+  {{ with .Params.company }}
+  <section aria-labelledby="company">
+    {{ partial "ui/section-heading.html" (dict "icon" "building" "title" .name "id" "company") }}
+    {{ partial "about/company.html" . }}
+  </section>
+  {{ end }}
+
+  {{/* ── Featured work ─────────────────────────────────────────── */}}
+  {{ with where (partial "projects/by-status.html" (where site.RegularPages "Type" "project")) "Params.featured" true }}
+  <section aria-labelledby="featured">
+    <div class="flex items-baseline justify-between gap-4">
+      {{ partial "ui/section-heading.html" (dict "icon" "star" "title" (i18n "featured_work") "id" "featured") }}
+      <a class="link-arrow text-sm" href="{{ "projects/" | relLangURL }}">{{ i18n "all_projects" }} {{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge") }}</a>
+    </div>
+    <div class="space-y-5">
+      {{ range $i, $p := . }}<div data-reveal style="--i: {{ $i }}">{{ partial "projects/featured-card.html" $p }}</div>{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{/* ── Stack ─────────────────────────────────────────────────── */}}
+  {{ with .Params.stack }}
+  <section aria-labelledby="stack">
+    {{ partial "ui/section-heading.html" (dict "icon" "layers" "title" (i18n "stack") "id" "stack") }}
+    <dl class="stack-list">
+      {{ range $i, $g := . }}
+      <div class="stack-row" data-reveal style="--i: {{ $i }}">
+        <dt>{{ $g.group }}</dt>
+        <dd>{{ partial "ui/chips.html" $g.items }}</dd>
+      </div>
+      {{ end }}
+    </dl>
+  </section>
+  {{ end }}
+
+  {{/* ── Education ─────────────────────────────────────────────── */}}
+  <section aria-labelledby="education">
+    {{ partial "ui/section-heading.html" (dict "icon" "graduation" "title" (i18n "education") "id" "education") }}
+    <ul class="space-y-4" role="list">
+      {{ range $i, $e := .Params.education }}
+      <li class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-x-6 gap-y-0.5" data-reveal style="--i: {{ $i }}">
+        <div>
+          <p class="font-medium">{{ .degree }}</p>
+          <p class="text-sm text-muted-foreground">{{ .school }}</p>
+        </div>
+        <p class="text-sm text-muted-foreground tabular-nums shrink-0">{{ .period }}</p>
+      </li>
+      {{ end }}
+    </ul>
+  </section>
+
+  {{/* ── Certificates ──────────────────────────────────────────── */}}
+  {{ with .Params.certificates }}
+  <section aria-labelledby="certificates">
+    {{ partial "ui/section-heading.html" (dict "icon" "award" "title" (i18n "certificates") "id" "certificates") }}
+    <ul class="grid gap-4 sm:grid-cols-2" role="list">
+      {{ range $i, $c := . }}
+      <li data-reveal style="--i: {{ $i }}">{{ partial "about/cert-card.html" $c }}</li>
+      {{ end }}
+    </ul>
+  </section>
+  {{ end }}
+
+</div>
+{{ end }}

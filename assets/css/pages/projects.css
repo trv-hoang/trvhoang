@@ -1,0 +1,217 @@
+/* ── Projects page ────────────────────────────────────────────────── */
+
+.featured-card {
+  display: grid;
+  padding: 0;
+  overflow: hidden;
+}
+@media (min-width: 48rem) {
+  .featured-card { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
+}
+.featured-card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+.featured-card-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 14rem;
+  padding: 1.5rem;
+  background: var(--accent-soft);
+  overflow: hidden;
+}
+
+/* two phone screenshots that fan out on hover */
+.phones {
+  position: relative;
+  width: min(15rem, 70%);
+  aspect-ratio: 1 / 1.15;
+}
+.phones img {
+  position: absolute;
+  top: 50%;
+  width: 52%;
+  border-radius: 1.1rem;
+  border: 4px solid #0c0a09;
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55);
+  transition: transform 500ms var(--ease-out);
+}
+.phones img:first-child { left: 8%; transform: translateY(-50%) rotate(-6deg); z-index: 1; }
+.phones img:last-child { right: 8%; transform: translateY(-46%) rotate(5deg); }
+.card-link:hover .phones img:first-child { transform: translate(-10%, -52%) rotate(-9deg); }
+.card-link:hover .phones img:last-child { transform: translate(10%, -44%) rotate(8deg); }
+@media (min-width: 48rem) {
+  .featured-card-visual { min-height: 100%; }
+  .phones { width: min(17rem, 82%); }
+}
+
+/* project facts set large when there is no screenshot */
+.highlights {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 18rem;
+}
+.highlights li {
+  font-size: 1rem;
+  color: var(--muted-foreground);
+  line-height: 1.3;
+  transition: transform 500ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 40ms);
+}
+.highlights-lead {
+  display: block;
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--accent-text);
+}
+.card-link:hover .highlights li { transform: translateX(4px); }
+
+/* compact rows for the rest */
+.project-rows > li + li { border-top: 1px solid var(--border); }
+.project-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.6rem 0.75rem;
+  margin-inline: -0.75rem;
+  border-radius: 0.9rem;
+  transition: background-color var(--t-hover) ease;
+}
+.project-row:hover,
+.project-row:focus-visible { background: var(--card); }
+.project-row:hover .card-title,
+.project-row:focus-visible .card-title { color: var(--accent-text); }
+.project-row:hover .nudge,
+.project-row:focus-visible .nudge { color: var(--accent-text); transform: translateX(3px); }
+.project-row-side {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: none;
+  padding-top: 0.15rem;
+}
+@media (max-width: 39.99rem) {
+  .project-row { flex-direction: column-reverse; gap: 0.6rem; }
+  .project-row-side { justify-content: space-between; }
+}
+
+/* web app screenshots in browser windows */
+.browser {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: var(--card);
+  box-shadow: 0 18px 40px -22px rgb(0 0 0 / 0.5);
+}
+.browser-bar {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
+}
+.browser-bar i { width: 0.45rem; height: 0.45rem; border-radius: 999px; background: color-mix(in oklab, var(--muted-foreground) 45%, transparent); }
+.browser img { display: block; width: 100%; height: auto; }
+
+/* two windows, one behind the other, that part on hover */
+.browsers { position: relative; width: 100%; max-width: 26rem; aspect-ratio: 1.25; }
+.browsers .browser { position: absolute; width: 82%; transition: transform 500ms var(--ease-out); }
+.browsers .browser:first-child { left: 0; bottom: 4%; z-index: 1; }
+.browsers .browser:last-child { right: 0; top: 4%; }
+.card-link:hover .browsers .browser:first-child { transform: translate(-4%, 3%); }
+.card-link:hover .browsers .browser:last-child { transform: translate(4%, -3%); }
+
+/* the screenshot strip on a project page */
+.gallery-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(32rem, 86%);
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.75rem;
+  overscroll-behavior-x: contain;
+}
+.gallery-track > li { scroll-snap-align: start; }
+.gallery-track:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; border-radius: 0.75rem; }
+.gallery figcaption { margin-top: 0.6rem; font-size: 0.875rem; color: var(--muted-foreground); }
+.gallery .browser { transition: border-color var(--t-hover) ease; }
+.gallery .browser:hover { border-color: color-mix(in oklab, var(--accent) 55%, var(--border)); }
+
+/* screenshot viewer (assets/js/modules/lightbox.js) */
+.lightbox {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(0.75rem, 3vw, 2.5rem);
+  border: 0;
+  background: transparent;
+  color: #fafaf9;
+  overflow: hidden;
+}
+.lightbox::backdrop { background: rgb(10 9 8 / 0.88); backdrop-filter: blur(6px); }
+.lightbox[open] { display: grid; place-items: center; animation: lightbox-in 220ms var(--ease-out); }
+@keyframes lightbox-in { from { opacity: 0; transform: scale(0.98); } }
+.lightbox-figure {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.lightbox-img {
+  max-width: min(100%, 1600px);
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.6rem;
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.7);
+  align-self: center;
+}
+.lightbox-caption {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: baseline;
+  max-width: 60rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: rgb(250 250 249 / 0.85);
+}
+.lightbox-count { color: rgb(250 250 249 / 0.55); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lightbox-btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  transition: background-color var(--t-hover) ease;
+}
+.lightbox-btn:hover { background: rgb(255 255 255 / 0.24); }
+.lightbox-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.lightbox-close { top: 1rem; right: 1rem; }
+.lightbox-prev, .lightbox-next { top: 50%; translate: 0 -50%; }
+.lightbox-prev { left: 1rem; }
+.lightbox-next { right: 1rem; }
+.lightbox.is-single .lightbox-prev, .lightbox.is-single .lightbox-next { display: none; }
+@media (max-width: 39.99rem) {
+  .lightbox-prev, .lightbox-next { top: auto; bottom: 1rem; translate: none; }
+}
+@media (min-width: 40rem) {
+  .lightbox:not(.is-single) { padding-inline: 5rem; }
+}
+.gallery .browser { cursor: zoom-in; }

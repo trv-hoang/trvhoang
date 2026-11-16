@@ -1,0 +1,5 @@
+{{/* Usage: {{ partial "ui/back-link.html" (dict "url" "/blog/" "label" "Back to Blog") }} */}}
+<a class="back-link" href="{{ .url }}">
+  {{ partial "ui/icon.html" "arrow-left" }}
+  <span>{{ .label }}</span>
+</a>

@@ -1,0 +1,39 @@
+{{/* A large project card: story on the left, a picture of the work on the right.
+     With `cover:` (one or two screenshots) the right side shows them as phones,
+     or as browser windows when `coverType: "web"`;
+     without, it sets the project's `highlights:` large. Receives a project page. */}}
+{{- $covers := .Params.cover -}}
+{{- if and $covers (not (reflect.IsSlice $covers)) }}{{ $covers = slice $covers }}{{ end -}}
+<a href="{{ .RelPermalink }}" class="card card-link featured-card">
+  <div class="featured-card-text">
+    <div class="flex flex-wrap items-center gap-2">
+      {{ partial "ui/status-badge.html" .Params.status }}
+      <span class="text-sm text-muted-foreground">{{ partial "projects/kind-label.html" .Params.kind }}{{ with .Params.duration }} · {{ . }}{{ end }}</span>
+    </div>
+    <h2 class="card-title mt-3 text-2xl sm:text-[1.75rem] leading-tight tracking-tight">{{ .Title }}</h2>
+    <p class="mt-2 text-muted-foreground max-w-[52ch]">{{ .Params.description }}</p>
+    {{ with .Params.role }}<p class="mt-3 text-sm"><span class="text-muted-foreground">{{ i18n "role" }}</span> {{ . }}</p>{{ end }}
+    <div class="mt-5">{{ partial "ui/chips.html" .Params.tags }}</div>
+    <span class="link-arrow mt-6 text-sm font-medium text-foreground">{{ i18n "read_case_study" }} {{ partial "ui/icon.html" (dict "name" "arrow-right" "class" "nudge") }}</span>
+  </div>
+
+  <div class="featured-card-visual" aria-hidden="true">
+    {{ if and $covers (eq .Params.coverType "web") }}
+    <div class="browsers">
+      {{ range first 2 $covers }}
+      <div class="browser"><span class="browser-bar" aria-hidden="true"><i></i><i></i><i></i></span>{{ partial "ui/img.html" (dict "src" . "width" 400) }}</div>
+      {{ end }}
+    </div>
+    {{ else if $covers }}
+    <div class="phones">
+      {{ range first 2 $covers }}{{ partial "ui/img.html" (dict "src" . "width" 150) }}{{ end }}
+    </div>
+    {{ else }}{{ with .Params.highlights }}
+    <ul class="highlights" role="list">
+      {{ range . }}{{ $parts := split . " " }}
+      <li><span class="highlights-lead">{{ index $parts 0 }}</span> {{ delimit (after 1 $parts) " " }}</li>
+      {{ end }}
+    </ul>
+    {{ end }}{{ end }}
+  </div>
+</a>
