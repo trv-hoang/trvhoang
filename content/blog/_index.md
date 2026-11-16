@@ -1,4 +1,4 @@
 ---
 title: "Blog"
-description: "Coffee, tech, and daily life — written by me."
+description: "Notes on coffee, code and everyday life."
 ---

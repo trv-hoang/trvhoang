@@ -1,37 +1,25 @@
 ---
-title: "USC-Project - Smart Contract Security"
-description: "Educational project demonstrating smart contract vulnerabilities and secure upgrade patterns — covering UUPS proxies, storage collision attacks, and implementation takeover risks using Solidity & Foundry."
+title: "EADF: Smart Contract Upgrade Analysis"
+description: "My graduation thesis at UIT: a static-analysis framework that compares two versions of an upgradeable smart contract and flags the vulnerabilities the upgrade introduced."
 status: "Completed"
-tags: ["Solidity", "Foundry", "Blockchain", "Security"]
+tags: ["Python", "Slither", "Solidity", "Foundry", "Security"]
 github: "https://github.com/trv-hoang/USC-Project"
 type: "project"
-weight: 5
-role: "Solo Developer"
+kind: "study"
+weight: 8
+role: "Sole author"
 teamSize: "1"
-duration: "2 months"
-platform: "Blockchain"
+duration: "Oct 2025 – Jun 2026"
+platform: "CLI & web demo"
 ---
 
 ## Overview
 
-A security-focused educational project demonstrating smart contract vulnerabilities and best practices. The project showcases practical demonstrations of common attack vectors and their mitigations in the Ethereum ecosystem.
+Upgradeable smart contracts keep their address and data while their code is replaced through a proxy. Each upgrade can bring new vulnerabilities that tools looking at one version at a time do not see as *caused by the upgrade*: storage layouts that collide between versions, an upgrade function anyone can call, an implementation left uninitialised. My thesis, supervised by Dr. Phan Thế Duy, models how security changes from version to version and builds EADF, a framework that finds those risks.
 
-### Key Topics Covered
+### What I built
 
-1. **Secure UUPS Upgrade Pattern** — proper EIP-1822 implementation following OpenZeppelin standards for safe contract upgrades
-2. **Storage Collision Attack** — how incorrect storage layout can corrupt proxy contracts and lead to unauthorized access
-3. **Uninitialized Implementation Attack** — methods attackers use to compromise unprotected implementation contracts
-
-### Technical Details
-
-- **16 comprehensive tests** across four test categories covering both vulnerable and secure implementations
-- **Demo scripts** illustrating both proper upgrades and attack scenarios
-- Built with **Foundry** (forge + anvil) for modern Solidity development and testing
-- Uses **OpenZeppelin** libraries for secure contract patterns
-
-### My Responsibilities
-
-- Researched and documented common smart contract security vulnerabilities
-- Built vulnerable contract examples alongside their secure counterparts
-- Wrote comprehensive test suites to demonstrate each attack and its mitigation
-- Created demo scripts for hands-on learning
+- **EADF** A Python pipeline on top of Slither that compares the storage layouts, syntax trees and detector findings of V1 and V2, with 3 detectors written for cross-version issues.
+- **Results** On an 18-pair benchmark I built, EADF caught all 15 upgrade-specific issues where Slither alone caught none, and classified the kind of upgrade correctly on 18 of 18 pairs (Slither: 7). The benchmark is small and synthetic, so I report this as a best-case ceiling.
+- **Evaluation harness** A ground-truth manifest and an `eadf evaluate` command that reports precision, recall, F1 and accuracy against a baseline.
+- **Attacks and costs** Reproduced storage-collision, uninitialised-implementation and unauthorised-upgrade attacks in Foundry, and measured that a hardened UUPS proxy costs about 2.1× the deployment gas of a naive one.

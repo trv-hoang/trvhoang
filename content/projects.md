@@ -1,6 +1,6 @@
 ---
 title: "Projects"
-description: "Things I've built — personal experiments, work projects, and everything in between."
+description: "What I've built at work, at Turing Factor, for clients and for fun."
 layout: "single"
 type: "projects"
 ---

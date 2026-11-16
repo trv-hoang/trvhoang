@@ -1,13 +1,13 @@
 ---
-title: "Engineer Intern at Zetamotion"
+title: "Software Engineer at Zetamotion"
 company: "Zetamotion"
 logo: "/images/company-zetamotion.webp"
-location: "Remote - United Kingdom"
+location: "Remote, United Kingdom"
 roles:
-  - title: "Engineer Intern"
-    period: "July 2025 — Present"
-    description: "Worked primarily on AI-based enterprise applications using React, Typescript, Python, and FastAPI. Creating custom UI components and managing complex states. Collaborated with teams to refactor legacy code, improving performance and developer experience while maintaining system stability. Gained experience in building and maintaining production-ready applications in a fast-paced environment."
-tags: ["React", "TypeScript", "FastAPI", "Python"]
+  - title: "Software Engineer"
+    period: "Jul 2025 – Present"
+    description: "Working on Spectron, an AI system that inspects products on factory lines: live WebRTC camera streams, one unified dashboard, and a retention job that keeps edge machines healthy."
+tags: ["WebRTC", "React", "TypeScript", "Python", "Flask", "Computer Vision"]
 type: "work"
 url: "/about/work/zetamotion/"
 weight: 1
@@ -15,22 +15,14 @@ weight: 1
 
 ## Overview
 
-At Zeta Motion, I worked on developing AI-powered enterprise web applications, focusing on delivering responsive user interfaces and reliable integration with backend services. The role required handling real-time data flows from AI systems while maintaining performance and scalability across the application. I collaborated closely with cross-functional teams, including backend developers and product managers, to ensure that the applications met user needs and adhered to best practices in software development. The experience provided valuable insights into building production-ready systems that effectively leverage AI technologies in a business context.
+At Zetamotion I work on Spectron, an AI system that inspects products for surface defects on factory lines. I work across the React dashboard, the Flask backend and the Python vision runtime, picking up bugs and features from the team's tracker.
 
-### Key Responsibilities
+### What I do
 
-1. **Frontend Development**: Built and maintained dynamic web interfaces using React and TypeScript, handling complex state management for real-time AI outputs and ensuring smooth user interactions. This involved creating reusable components, optimizing rendering performance, and ensuring responsive design across various devices.
-2. **System Integration**: Collaborated closely with backend services (FastAPI) to integrate AI inference results into the frontend, ensuring efficient data flow and consistent API communication. This included writing tests to validate API contracts and working with backend developers to troubleshoot and optimize performance.
-3. **Codebase Modernization**: Refactored legacy frontend components by transitioning from class-based architecture to modern React Hooks, improving code maintainability and overall system performance. This effort also involved enhancing the developer experience by simplifying component structures and improving readability.
+- **Live camera view** Replaced ~1 fps image polling with a continuous WebRTC stream per camera: an aiortc signalling endpoint and video track in Flask, and a React hook on the dashboard. It runs offline on the factory network.
+- **One interface** Removed a legacy parallel version of the UI by planning the widget migration and moving it screen by screen, without losing a feature.
+- **Edge machines** A configurable report retention job on a cron schedule, so inspection machines never run out of disk.
+- **Inspection bugs** Fixed scans resetting to the front side and defect-map notes drifting between report tabs.
+- **AI-drafted guides** Prototyped writer and reviewer agents that draft operator guides from the source code, with every claim traced to a file and line.
 
-### Achievements
-
-- Improved frontend performance by optimizing state handling and reducing unnecessary re-renders
-- Contributed to stabilizing data flow between frontend and backend services in real-time AI scenarios
-- Enhanced code quality and developer experience through systematic refactoring efforts
-- Helped standardize UI behavior across features, leading to a more consistent user experience
-- Gained practical experience in building and maintaining AI-driven applications in a production environment
-- Strengthened understanding of end-to-end system development, from feature implementation to deployment workflows
-- Received positive feedback from team members and stakeholders on the improvements made to the codebase and overall application performance
-
-*More details to come...*
+More detail on the [Spectron project page](/project/spectron/).

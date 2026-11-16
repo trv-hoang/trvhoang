@@ -1,31 +1,24 @@
 ---
-title: "HotelLuxe - Hotel Booking Website"
-description: "A hotel booking website project built with TypeScript, providing a seamless reservation experience with modern web technologies."
+title: "HotelLuxe"
+description: "A UI/UX course project: a hotel-booking web app. I owned the search and filter flow, from a user survey to wireframes and Figma components."
 status: "Completed"
-tags: ["TypeScript", "Web", "API", "UX/UI", "Figma"]
+tags: ["UX research", "Balsamiq", "Figma", "TypeScript"]
 github: "https://github.com/trv-hoang/hotelluxe"
 type: "project"
-weight: 6
-role: "Frontend Developer"
-teamSize: "4"
+kind: "study"
+weight: 10
+role: "Search & filter flow (UI/UX)"
+teamSize: "5"
 duration: "3 months"
 platform: "Web"
 ---
 
 ## Overview
 
-HotelLuxe is a hotel booking platform that provides users with a seamless reservation experience. The project focuses on intuitive UX/UI design and a modern TypeScript-based tech stack.
+HotelLuxe is a hotel-booking web app our team of five designed and built for the UI/UX course at UIT.
 
-### Key Features
+### What I did
 
-- **Room Browsing** — search and filter available rooms by date, type, and price
-- **Booking Flow** — streamlined multi-step reservation process
-- **Responsive Design** — fully optimized for desktop, tablet, and mobile
-- **UI/UX Design** — designed in Figma before implementation for pixel-perfect results
-
-### My Responsibilities
-
-- Designed the UI/UX in Figma with the team
-- Built the frontend components with TypeScript
-- Implemented the booking flow and room filtering logic
-- Ensured responsive design across all device sizes
+- **User survey** Asked people how they look for a hotel and which filters they reach for first.
+- **Wireframes** Turned the answers into Balsamiq wireframes for searching and filtering rooms by date, type and price.
+- **Components** Built the matching Figma components for the search and filter flow, used by the rest of the team.

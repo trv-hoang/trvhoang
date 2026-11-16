@@ -5,7 +5,8 @@ status: "Completed"
 tags: ["CSS", "HTML", "Web"]
 github: "https://github.com/trv-hoang/Affiliate-Website"
 type: "project"
-weight: 7
+kind: "side"
+weight: 15
 role: "Solo Developer"
 teamSize: "1"
 duration: "1 week"
