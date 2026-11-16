@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["UX research", "Balsamiq", "Figma", "TypeScript"]
 github: "https://github.com/trv-hoang/hotelluxe"
 type: "project"
-kind: "study"
+group: "study"
 weight: 10
 role: "Search & filter flow (UI/UX)"
 teamSize: "5"

@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["Python", "Qt Designer", "OpenWeatherMap API", "Desktop"]
 github: "https://github.com/khadonnn/weather-py-app"
 type: "project"
-kind: "study"
+group: "study"
 weight: 12
 role: "Team member"
 teamSize: "5"

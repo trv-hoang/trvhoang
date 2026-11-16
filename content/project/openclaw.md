@@ -4,7 +4,7 @@ description: "A personal AI agent that drafted blog posts and automated small ta
 status: "Discontinued"
 tags: ["AI agents", "Python", "API"]
 type: "project"
-kind: "side"
+group: "side"
 weight: 14
 role: "Solo developer"
 teamSize: "1"

@@ -4,7 +4,7 @@ description: "Turing Factor's HR system for Vietnamese companies. I built the em
 status: "In Progress"
 tags: ["Cloudflare Workers", "Hono", "Hotwire", "D1", "Durable Objects", "PWA"]
 type: "project"
-kind: "turing"
+group: "turing"
 cover: ["/images/projects/turing-hris/cover-approvals.jpg", "/images/projects/turing-hris/cover-holidays.jpg"]
 coverType: "web"
 gallery:

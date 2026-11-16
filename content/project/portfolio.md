@@ -6,7 +6,7 @@ tags: ["Hugo", "Tailwind CSS", "MapLibre", "Cloudflare Pages"]
 github: "https://github.com/trv-hoang/trvhoang"
 liveUrl: "https://trvhoang.pages.dev"
 type: "project"
-kind: "side"
+group: "side"
 weight: 9
 role: "Solo developer"
 teamSize: "1"

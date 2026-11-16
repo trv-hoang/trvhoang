@@ -8,7 +8,7 @@
   <div class="featured-card-text">
     <div class="flex flex-wrap items-center gap-2">
       {{ partial "ui/status-badge.html" .Params.status }}
-      <span class="text-sm text-muted-foreground">{{ partial "projects/kind-label.html" .Params.kind }}{{ with .Params.duration }} · {{ . }}{{ end }}</span>
+      <span class="text-sm text-muted-foreground">{{ partial "projects/kind-label.html" .Params.group }}{{ with .Params.duration }} · {{ . }}{{ end }}</span>
     </div>
     <h2 class="card-title mt-3 text-2xl sm:text-[1.75rem] leading-tight tracking-tight">{{ .Title }}</h2>
     <p class="mt-2 text-muted-foreground max-w-[52ch]">{{ .Params.description }}</p>

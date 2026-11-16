@@ -4,7 +4,7 @@ description: "Hệ thống dùng AI phát hiện lỗi bề mặt sản phẩm t
 status: "Live"
 tags: ["React", "TypeScript", "Python", "Flask", "WebRTC", "OpenCV"]
 type: "project"
-kind: "product"
+group: "product"
 highlights: ["WebRTC cho camera trực tiếp", "Một giao diện thay cho hai", "Tự dọn báo cáo cũ"]
 weight: 6
 role: "Kỹ sư phần mềm (full-stack)"

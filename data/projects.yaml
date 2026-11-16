@@ -1,5 +1,6 @@
 # Groups for the /projects/ filter, in the order they are shown.
-# Each project sets `kind:` in its front matter to one of these ids.
+# Each project sets `group:` in its front matter to one of these ids (not `kind`,
+# which Hugo reserves for the page kind).
 # Projects are listed by status in this order, then by weight. A status not
 # listed here comes last.
 statusOrder: ["Live", "In Progress", "In Design", "Completed", "Discontinued"]

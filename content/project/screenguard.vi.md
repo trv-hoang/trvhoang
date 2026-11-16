@@ -4,7 +4,7 @@ description: "Ứng dụng trên thanh menu của macOS, tự tìm và che thôn
 status: "In Progress"
 tags: ["Rust", "Tauri", "OCR trên máy", "macOS"]
 type: "project"
-kind: "side"
+group: "side"
 weight: 7
 role: "Phát triển một mình"
 teamSize: "1"

@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["Java", "Swing", "MySQL"]
 github: "https://github.com/trv-hoang/Magic-netcafe"
 type: "project"
-kind: "study"
+group: "study"
 weight: 13
 role: "Lập trình viên"
 teamSize: "2"

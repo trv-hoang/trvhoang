@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["Java", "Hadoop", "MapReduce", "HBase", "Python", "Docker"]
 github: "https://github.com/kimson99/big-data-noaa"
 type: "project"
-kind: "study"
+group: "study"
 weight: 11
 role: "MapReduce & HBase"
 teamSize: "3"

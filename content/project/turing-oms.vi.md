@@ -4,7 +4,7 @@ description: "Phần mềm quản lý đơn hàng cho các shop bán qua Faceboo
 status: "In Design"
 tags: ["Khảo sát nhu cầu", "PRD", "Bản mẫu", "Cloudflare Workers", "Hono", "D1"]
 type: "project"
-kind: "turing"
+group: "turing"
 weight: 5
 role: "Phụ trách sản phẩm & lập trình viên chính"
 teamSize: "3"

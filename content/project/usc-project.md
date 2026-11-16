@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["Python", "Slither", "Solidity", "Foundry", "Security"]
 github: "https://github.com/trv-hoang/USC-Project"
 type: "project"
-kind: "study"
+group: "study"
 weight: 8
 role: "Sole author"
 teamSize: "1"

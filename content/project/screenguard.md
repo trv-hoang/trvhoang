@@ -4,7 +4,7 @@ description: "A macOS menu-bar app that finds and masks sensitive data in screen
 status: "In Progress"
 tags: ["Rust", "Tauri", "On-device OCR", "macOS"]
 type: "project"
-kind: "side"
+group: "side"
 weight: 7
 role: "Solo developer"
 teamSize: "1"

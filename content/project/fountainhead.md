@@ -4,7 +4,7 @@ description: "Turing Factor's multi-tenant SaaS platform on Cloudflare Workers. 
 status: "In Progress"
 tags: ["Cloudflare Workers", "Hono JSX", "Hotwire", "D1", "Drizzle", "SQLite FTS5", "PWA"]
 type: "project"
-kind: "turing"
+group: "turing"
 featured: true
 cover: ["/images/projects/fountainhead/cover-overview.jpg", "/images/projects/fountainhead/cover-note.jpg"]
 coverType: "web"

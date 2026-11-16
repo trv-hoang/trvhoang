@@ -4,7 +4,7 @@ description: "Trợ lý AI cá nhân từng giúp tôi viết nháp bài blog v�
 status: "Discontinued"
 tags: ["AI agent", "Python", "API"]
 type: "project"
-kind: "side"
+group: "side"
 weight: 14
 role: "Phát triển một mình"
 teamSize: "1"

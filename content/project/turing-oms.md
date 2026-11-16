@@ -4,7 +4,7 @@ description: "Order management for small shops that sell through Facebook, TikTo
 status: "In Design"
 tags: ["Product discovery", "PRD", "Prototyping", "Cloudflare Workers", "Hono", "D1"]
 type: "project"
-kind: "turing"
+group: "turing"
 weight: 5
 role: "Product owner & lead developer"
 teamSize: "3"

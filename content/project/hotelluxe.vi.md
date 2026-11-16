@@ -5,7 +5,7 @@ status: "Completed"
 tags: ["Khảo sát người dùng", "Balsamiq", "Figma", "TypeScript"]
 github: "https://github.com/trv-hoang/hotelluxe"
 type: "project"
-kind: "study"
+group: "study"
 weight: 10
 role: "Tìm kiếm & lọc phòng (UI/UX)"
 teamSize: "5"

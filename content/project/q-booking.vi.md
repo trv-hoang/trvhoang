@@ -6,7 +6,7 @@ tags: ["Expo", "React Native", "TypeScript", "Cloudflare Workers", "Hono", "D1",
 appStore: "https://apps.apple.com/us/app/qbooking-app/id6778668023"
 googlePlay: "https://play.google.com/store/apps/details?id=com.vn.qbooking.client"
 type: "project"
-kind: "product"
+group: "product"
 featured: true
 cover: ["/images/projects/q-booking-home.jpg", "/images/projects/q-booking-bookings.jpg"]
 highlights: ["500+ người dùng trước khi bàn giao", "App Store & Google Play", "5 Cloudflare Workflows"]

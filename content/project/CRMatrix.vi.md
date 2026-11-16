@@ -4,7 +4,7 @@ description: "Hệ thống quản lý khách hàng nội bộ của 1Matrix, the
 status: "Completed"
 tags: ["TypeScript", "React Router", "Hono", "Cloudflare D1", "SQLite FTS5", "Durable Objects"]
 type: "project"
-kind: "product"
+group: "product"
 featured: true
 cover: ["/images/projects/crmatrix/cover-dashboard.jpg", "/images/projects/crmatrix/cover-deals.jpg"]
 coverType: "web"

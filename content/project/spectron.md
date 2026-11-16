@@ -4,7 +4,7 @@ description: "ZetaMotion's AI visual inspection platform for factory production 
 status: "Live"
 tags: ["React", "TypeScript", "Python", "Flask", "WebRTC", "OpenCV"]
 type: "project"
-kind: "product"
+group: "product"
 highlights: ["WebRTC live camera view", "One interface instead of two", "Automatic report clean-up"]
 weight: 6
 role: "Software engineer (full-stack)"

@@ -9,7 +9,7 @@
 <div class="filter-list mb-10" data-filter="projects" data-filter-param="kind" role="group" aria-label="{{ i18n "filter_projects" }}" data-intro style="--i: 2">
   <button type="button" class="filter" data-filter-value="all" aria-pressed="true">{{ i18n "all" }} <span class="filter-count">{{ len $projects }}</span></button>
   {{ range $kinds }}
-  {{- $n := len (where $projects "Params.kind" .id) -}}
+  {{- $n := len (where $projects "Params.group" .id) -}}
   {{ if $n }}<button type="button" class="filter" data-filter-value="{{ .id }}" aria-pressed="false">{{ i18n (printf "kind_%s" .id) | default .label }} <span class="filter-count">{{ $n }}</span></button>{{ end }}
   {{ end }}
 </div>
@@ -17,7 +17,7 @@
 {{ with $featured }}
 <section aria-label="{{ i18n "featured_projects" }}" class="space-y-5" data-filter-section="projects">
   {{ range $i, $p := . }}
-  <div data-filter-item="projects" data-filter-keys="{{ $p.Params.kind }}" data-reveal>
+  <div data-filter-item="projects" data-filter-keys="{{ $p.Params.group }}" data-reveal>
     {{ partial "projects/featured-card.html" $p }}
   </div>
   {{ end }}
@@ -29,7 +29,7 @@
   <h2 id="more-projects" class="section-heading">{{ i18n "more_projects" }}</h2>
   <ul class="project-rows" role="list">
     {{ range $i, $p := . }}
-    <li data-filter-item="projects" data-filter-keys="{{ $p.Params.kind }}" data-reveal style="--i: {{ mod $i 4 }}">
+    <li data-filter-item="projects" data-filter-keys="{{ $p.Params.group }}" data-reveal style="--i: {{ mod $i 4 }}">
       {{ partial "projects/project-row.html" $p }}
     </li>
     {{ end }}
