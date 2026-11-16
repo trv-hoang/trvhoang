@@ -1,7 +1,7 @@
 ---
 title: "Two agents, one user guide, and why they don't share notes"
 date: 2026-11-16T17:00:00+07:00
-draft: true
+draft: false
 summary: "A routine Jira ticket became a pair of AI skills that write operator guides and review them independently. Most of the work was deciding who gets to see what."
 tags: ["tech", "ai"]
 coverImage: "/blog/two-agents-one-guide/cover.svg"

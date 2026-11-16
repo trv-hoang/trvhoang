@@ -1,7 +1,7 @@
 ---
 title: "Pour-over by the lake on a cold Hanoi morning"
 date: 2026-11-16T16:30:00+07:00
-draft: true
+draft: false
 summary: "A Kono dripper, a hot kettle and a windy morning by Swan Lake in Ecopark. One cup took me straight back to my two years behind a coffee bar."
 tags: ["coffee", "life"]
 coverImage: "/blog/coffee-camping-ecopark/coffee-table.jpg"
