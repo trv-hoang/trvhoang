@@ -7,7 +7,8 @@
 <script id="i18n" type="application/json">{{ $strings | jsonify | safeJS }}</script>
 {{- $opts := dict "target" "es2020" "format" "esm" -}}
 {{- $js := resources.Get "js/main.js" | js.Build $opts -}}
-{{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ end -}}
+{{- /* fingerprinted in development too, so a browser never runs a cached, older bundle */ -}}
+{{- if hugo.IsProduction }}{{ $js = $js | minify | fingerprint }}{{ else }}{{ $js = $js | fingerprint }}{{ end -}}
 <script type="module" src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }}></script>
 
 {{- with site.Params.cloudflareAnalyticsToken }}

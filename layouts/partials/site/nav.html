@@ -45,38 +45,6 @@
       {{ partial "ui/icon.html" (dict "name" "moon" "class" "theme-icon theme-icon-moon") }}
     </button>
   </nav>
-  {{/* Slide the pill from where it was on the previous page. Runs before the
-       first paint, so the pill never flashes at its new place first, and it
-       works with or without cross-document view transitions. */}}
-  <script>
-    (function () {
-      try {
-        var key = "nav-pill-from";
-        var bar = document.currentScript.previousElementSibling.querySelector(".nav-desktop");
-        var at = function () {
-          var pill = bar && bar.querySelector(".nav-pill");
-          if (!pill || getComputedStyle(bar).display === "none") return null;
-          var b = bar.getBoundingClientRect(), r = pill.getBoundingClientRect();
-          return { pill: pill, x: r.left - b.left, w: r.width };
-        };
-        addEventListener("pagehide", function () {
-          var now = at();
-          if (now) sessionStorage.setItem(key, JSON.stringify({ x: now.x, w: now.w, t: Date.now() }));
-        });
-        var saved = sessionStorage.getItem(key);
-        sessionStorage.removeItem(key);
-        if (!saved || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        var from = JSON.parse(saved), to = at();
-        if (!to || Date.now() - from.t > 5000) return;
-        var dx = from.x - to.x;
-        if (Math.abs(dx) < 1 && Math.abs(from.w - to.w) < 1) return;
-        to.pill.animate(
-          [{ transform: "translateX(" + dx + "px)", width: from.w + "px" }, { transform: "none", width: to.w + "px" }],
-          { duration: 420, easing: "cubic-bezier(0.34, 1.4, 0.64, 1)" }
-        );
-      } catch (e) {}
-    })();
-  </script>
 
   <div class="mobile-menu" id="mobile-menu" data-open="false">
     {{- range $i, $item := site.Menus.main }}

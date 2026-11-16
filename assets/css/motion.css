@@ -13,40 +13,27 @@
   --t-reveal: 650ms;
 }
 
-/* ── Page transitions (cross-document View Transitions) ──────────── */
-@view-transition {
-  navigation: auto;
+/* ── Page changes ────────────────────────────────────────────────
+   No cross-document view transitions: they snapshot the nav as a flat image,
+   which drops its backdrop blur and the pill's rounding and can hang on screen
+   while a slow page loads. Instead the browser keeps the old page until the new
+   one is ready and swaps them at once; the nav is identical on both, so it
+   stands still. The pill slides on the page being left (assets/js/modules/nav.js)
+   and the new page's content eases in below it. */
+.js main.page {
+  animation: page-in 320ms var(--ease-out) both;
 }
-
-.site-nav { view-transition-name: site-nav; }
-.site-footer { view-transition-name: site-footer; }
-
-/* the nav does not cross-fade: only the new, live nav shows, so the pill's
-   slide (the script after the nav in partials/site/nav.html) plays inside it */
-::view-transition-old(site-nav) { animation: none; opacity: 0; }
-::view-transition-new(site-nav) { animation: none; }
-
-::view-transition-old(root) {
-  animation: vt-out 180ms var(--ease-in-out) both;
-}
-::view-transition-new(root) {
-  animation: vt-in 320ms var(--ease-out) 60ms both;
-}
-
-@keyframes vt-out {
-  to { opacity: 0; transform: translateY(-6px); }
-}
-@keyframes vt-in {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
 }
 
 /* the theme switch takes over the root transition with a circular wipe */
-html.theme-switching::view-transition-old(root),
-html.theme-switching::view-transition-new(root) {
+::view-transition-old(root),
+::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
-html.theme-switching::view-transition-new(root) {
+::view-transition-new(root) {
   animation: theme-wipe 560ms var(--ease-in-out) both;
 }
 @keyframes theme-wipe {
@@ -95,8 +82,6 @@ html.theme-switching::view-transition-new(root) {
 
 /* ── Reduced motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-
   *, *::before, *::after {
     animation-duration: 1ms !important;
     animation-delay: 0ms !important;
