@@ -46,11 +46,18 @@
     -}}
   {{- end -}}
 {{- else -}}
-  {{- $avatar := (resources.Get site.Params.ogImage).Fill "360x360 Smart" -}}
-  {{- $img = $base | images.Filter
-    (images.Overlay $avatar 96 135)
-    (images.Text $name (dict "font" $font "color" $white "size" 64 "x" 512 "y" 220))
-    (images.Text (site.Home.Params.role | default "") (dict "font" $font "color" $amber "size" 34 "x" 512 "y" 320))
+  {{- /* ogImage may also be a full URL (see hugo.toml): then there is no local
+    avatar to draw, and the text moves to the left edge. */ -}}
+  {{- $filters := slice -}}
+  {{- $x := 96 -}}
+  {{- with resources.Get site.Params.ogImage -}}
+    {{- $filters = $filters | append (images.Overlay (.Fill "360x360 Smart") 96 135) -}}
+    {{- $x = 512 -}}
+  {{- end -}}
+  {{- $filters = $filters | append
+    (images.Text $name (dict "font" $font "color" $white "size" 64 "x" $x "y" 220))
+    (images.Text (site.Home.Params.role | default "") (dict "font" $font "color" $amber "size" 34 "x" $x "y" 320))
   -}}
+  {{- $img = $base | images.Filter $filters -}}
 {{- end -}}
 {{- return dict "url" $img.Permalink "width" $img.Width "height" $img.Height "alt" $alt -}}

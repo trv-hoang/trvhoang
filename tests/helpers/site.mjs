@@ -8,12 +8,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-export function buildSite() {
+// Not --quiet: with it Hugo prints nothing on failure, so errors would be lost.
+// env: extra variables, e.g. HUGO_PARAMS_OGIMAGE to override a site param.
+export function buildSite(env = {}) {
   const out = mkdtempSync(join(tmpdir(), 'trvhoang-test-'));
   try {
-    execFileSync('hugo', ['build', '--quiet', '-e', 'production', '-d', out], { cwd: root, stdio: 'pipe' });
+    execFileSync('hugo', ['build', '-e', 'production', '-d', out], { cwd: root, stdio: 'pipe', env: { ...process.env, ...env } });
   } catch (err) {
-    throw new Error(`hugo build failed:\n${err.stderr}`);
+    throw new Error(`hugo build failed:\n${err.stdout}${err.stderr}`);
   }
   return out;
 }
