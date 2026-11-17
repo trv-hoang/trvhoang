@@ -1,7 +1,7 @@
 // Shared helpers for the SEO tests: one Hugo build per test file, then plain
 // string parsing of the output (no DOM library, to keep the repo dependency-free).
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,6 +12,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 // env: extra variables, e.g. HUGO_PARAMS_OGIMAGE to override a site param.
 export function buildSite(env = {}) {
   const out = mkdtempSync(join(tmpdir(), 'trvhoang-test-'));
+  // Each test file runs in its own process: remove its build when it exits.
+  process.on('exit', () => rmSync(out, { recursive: true, force: true }));
   try {
     execFileSync('hugo', ['build', '-e', 'production', '-d', out], { cwd: root, stdio: 'pipe', env: { ...process.env, ...env } });
   } catch (err) {

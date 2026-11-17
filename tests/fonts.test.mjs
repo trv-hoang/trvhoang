@@ -15,6 +15,7 @@ test('preloads a local woff2 that exists', () => {
 });
 test('global.css declares the font faces', () => {
   const css = readFileSync(join(dir, 'global.css'), 'utf8');
-  for (const w of ['400', '500', '600', '700']) assert.match(css, new RegExp(`font-family:"?Be Vietnam Pro"?;[^}]*font-weight:${w}`));
-  assert.match(css, /font-display:swap/);
+  // Whitespace-tolerant: the dev watcher writes unminified CSS.
+  for (const w of ['400', '500', '600', '700']) assert.match(css, new RegExp(`font-family:\\s*"?Be Vietnam Pro"?;[^}]*font-weight:\\s*${w}`));
+  assert.match(css, /font-display:\s*swap/);
 });
