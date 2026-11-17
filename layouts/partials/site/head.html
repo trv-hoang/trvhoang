@@ -17,7 +17,8 @@
 {{- $shared := partial "seo/is-shared.html" . -}}
 {{- $ogLocale := partial "seo/og-locale.html" .Language -}}
 <link rel="canonical" href="{{ $canonical.Permalink }}">
-{{- if and (not $shared) (gt (len .AllTranslations) 1) }}
+{{- /* hreflang only between indexable translations: not on shared posts or noindex pages. */}}
+{{- if and (not $shared) (not .Params.noindex) (gt (len .AllTranslations) 1) }}
   {{- range .AllTranslations }}
 <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
     {{- if eq .Language.Lang hugo.Sites.Default.Language.Lang }}

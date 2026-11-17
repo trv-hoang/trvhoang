@@ -26,3 +26,7 @@ test('sitemaps hold no tag pages and no vi blog posts', () => {
 });
 test('RSS link in head', () => assert.ok(linkTags(readOut(dir, '/'), 'alternate').some(l => l.type === 'application/rss+xml')));
 test('no verification meta while the param is empty', () => assert.equal(metaContent(readOut(dir, '/'), 'google-site-verification'), undefined));
+test('noindex tag pages carry no hreflang', () => {
+  for (const p of ['/tags/', '/vi/tags/coffee/'])
+    assert.equal(linkTags(readOut(dir, p), 'alternate').filter(l => l.hreflang).length, 0);
+});
