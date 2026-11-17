@@ -37,3 +37,9 @@ test('auto-summary descriptions have no surrounding whitespace', () => {
   assert.equal(metaContent(h, 'description'), 'Fixture for the share-card tests.');
   assert.equal(jsonLd(h).find(n => n['@type'] === 'BlogPosting').description, 'Fixture for the share-card tests.');
 });
+test('a WebP cover becomes a JPEG share image', () => {
+  const u = metaContent(readOut(dir, '/blog/fixture-webp-cover/'), 'og:image');
+  assert.match(u, /\.jpe?g$/);
+  const b = readFileSync(join(dir, new URL(u).pathname));
+  assert.deepEqual([b[0], b[1]], [0xff, 0xd8]);
+});
