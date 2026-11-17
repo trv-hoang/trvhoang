@@ -4,8 +4,11 @@
 {{- $root := hugo.Sites.Default.Home.Permalink -}}
 {{- $page := partial "seo/canonical.html" . -}}
 {{- $person := dict "@id" (printf "%s#person" $root) -}}
+{{- /* Each language site is its own WebSite node (its own @id), so inLanguage
+  never conflicts across pages. */ -}}
+{{- $website := printf "%s#website" site.Home.Permalink -}}
 {{- $nodes := slice
-  (dict "@type" "WebSite" "@id" (printf "%s#website" $root) "name" site.Params.author.name "url" $root "inLanguage" site.Language.Lang "publisher" $person)
+  (dict "@type" "WebSite" "@id" $website "name" site.Params.author.name "url" site.Home.Permalink "inLanguage" site.Language.Lang "publisher" $person)
   (partial "seo/person.html" .)
 -}}
 {{- $nodes = $nodes | append (partial "seo/organizations.html" .) -}}
@@ -13,7 +16,7 @@
   {{- $nodes = $nodes | append (dict
     "@type" "ProfilePage" "@id" (printf "%s#profilepage" .Permalink) "url" .Permalink
     "mainEntity" $person "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")
-    "inLanguage" site.Language.Lang "isPartOf" (dict "@id" (printf "%s#website" $root))) -}}
+    "inLanguage" site.Language.Lang "isPartOf" (dict "@id" $website)) -}}
 {{- else -}}
   {{- if partial "seo/is-shared.html" . -}}
     {{- $og := partial "seo/og-image.html" . -}}

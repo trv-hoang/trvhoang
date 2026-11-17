@@ -53,3 +53,20 @@ test('vi copy of a post has English breadcrumbs', () => {
   const [bc] = byType(jsonLd(readOut(dir, '/vi/blog/two-agents-one-guide/')), 'BreadcrumbList');
   assert.deepEqual(bc.itemListElement.map(i => i.item), ['https://trvhoang.pages.dev/', 'https://trvhoang.pages.dev/blog/', 'https://trvhoang.pages.dev/blog/two-agents-one-guide/']);
 });
+// One @id must not carry English values on / and Vietnamese ones on /vi/:
+// Google merges nodes by @id. Localized fields appear only in the default
+// language; each language site gets its own WebSite node.
+test('vi pages give shared @ids only language-neutral values', () => {
+  const g = jsonLd(readOut(dir, '/vi/'));
+  assert.equal(byType(g, 'WebSite')[0]['@id'], 'https://trvhoang.pages.dev/vi/#website');
+  const [p] = byType(g, 'Person');
+  for (const k of ['jobTitle', 'description', 'homeLocation', 'knowsAbout', 'alumniOf']) assert.equal(p[k], undefined, k);
+  assert.equal(p.name, 'Trần Việt Hoàng'); assert.ok(p.sameAs.length);
+  const tf = byType(g, 'Organization').find(o => o['@id'] === 'https://trvhoang.pages.dev/#turing-factor');
+  assert.equal(tf.description, undefined); assert.equal(tf.foundingDate, '2026-07');
+});
+test('English pages keep the full Person and the root WebSite', () => {
+  const g = jsonLd(readOut(dir, '/map/'));
+  assert.equal(byType(g, 'WebSite')[0]['@id'], 'https://trvhoang.pages.dev/#website');
+  assert.equal(byType(g, 'Person')[0].jobTitle, 'Software Engineer & Co-founder');
+});

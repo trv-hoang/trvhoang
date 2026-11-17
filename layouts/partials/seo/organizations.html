@@ -1,5 +1,6 @@
 {{- /* Organization nodes: current employers on every page; Turing Factor
-  (from the home page's `company`) on the home page only. */ -}}
+  (from the home page's `company`) on the home page only. The translated
+  description is left out outside the default language: one @id, one language. */ -}}
 {{- $root := hugo.Sites.Default.Home.Permalink -}}
 {{- $out := slice -}}
 {{- range partial "seo/employers.html" . -}}
@@ -11,7 +12,7 @@
       "@type" "Organization"
       "@id" (printf "%s#%s" $root (urlize .name))
       "name" .name
-      "description" .about
+      "description" (cond (eq site.Language.Lang hugo.Sites.Default.Language.Lang) .about "")
       "founder" (dict "@id" (printf "%s#person" $root))
       "foundingDate" .founded
       "areaServed" .areaServed

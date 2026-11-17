@@ -14,18 +14,25 @@
 {{- with resources.Get site.Params.ogImage }}{{ $image = .Permalink }}{{ end -}}
 {{- $home_location := "" -}}
 {{- with $home.Params.location }}{{ $home_location = dict "@type" "Place" "name" . }}{{ end -}}
-{{- return partial "seo/compact.html" (dict
+{{- $person := dict
   "@type" "Person"
   "@id" (printf "%s#person" $root)
   "name" site.Params.author.name
   "alternateName" site.Params.author.alternateName
   "url" $root
   "image" $image
-  "jobTitle" $home.Params.role
-  "description" ($home.Params.description | plainify)
-  "homeLocation" $home_location
   "sameAs" $sameAs
   "worksFor" (cond (eq (len $employers) 1) (index $employers 0) $employers)
-  "knowsAbout" $knows
-  "alumniOf" $alumni
-) -}}
+-}}
+{{- /* #person is one @id on every page, and Google merges nodes by @id, so the
+  translated fields come only from the default language. */ -}}
+{{- if eq site.Language.Lang hugo.Sites.Default.Language.Lang -}}
+  {{- $person = merge $person (dict
+    "jobTitle" $home.Params.role
+    "description" ($home.Params.description | plainify)
+    "homeLocation" $home_location
+    "knowsAbout" $knows
+    "alumniOf" $alumni
+  ) -}}
+{{- end -}}
+{{- return partial "seo/compact.html" $person -}}
