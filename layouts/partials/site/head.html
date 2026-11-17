@@ -4,6 +4,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
+{{- if .Params.noindex }}
+<meta name="robots" content="noindex, follow">
+{{- end }}
+{{- with site.Params.googleSiteVerification }}
+<meta name="google-site-verification" content="{{ . }}">
+{{- end }}
+{{- with site.Home.OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" title="{{ site.Params.author.name }}" href="{{ .Permalink }}">
+{{- end }}
 {{- $canonical := partial "seo/canonical.html" . -}}
 {{- $shared := partial "seo/is-shared.html" . -}}
 {{- $ogLocale := partial "seo/og-locale.html" .Language -}}

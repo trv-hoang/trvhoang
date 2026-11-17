@@ -5,11 +5,16 @@ title = 'trvhoang'
 defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = false
 
+# robots.txt comes from layouts/robots.txt
+enableRobotsTXT = true
+
 [params]
   # og:image: a path in assets/ (resized at build time) or a full URL
   ogImage = 'images/avatar.jpg'
   # Cloudflare Web Analytics token from the Cloudflare dashboard (loaded in production only)
   cloudflareAnalyticsToken = 'YOUR_TOKEN_HERE'
+  # Google Search Console HTML-tag token (only the content value); empty emits nothing
+  googleSiteVerification = ''
 
   [params.author]
     name = 'Trần Việt Hoàng'
@@ -157,3 +162,24 @@ defaultContentLanguageInSubdir = false
   [markup.tableOfContents]
     startLevel = 2
     endLevel = 3
+
+# Tag pages are thin lists (most hold one post): keep them out of search
+# results and the sitemap, but let crawlers follow their links.
+[[cascade]]
+  [cascade.params]
+    noindex = true
+  [cascade.sitemap]
+    disable = true
+  [cascade.target]
+    kind = '{taxonomy,term}'
+
+# The /vi/ copies of blog posts canonicalize to English, so only the English
+# sitemap lists them.
+[[cascade]]
+  [cascade.sitemap]
+    disable = true
+  [cascade.target]
+    kind = 'page'
+    path = '/blog/**'
+    [cascade.target.sites.matrix]
+      languages = ['vi']
