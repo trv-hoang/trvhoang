@@ -1,0 +1,12 @@
+{{- /* Returns the page whose .Permalink is canonical: the default-language copy
+  for a shared blog post, the page itself otherwise. */ -}}
+{{- $page := . -}}
+{{- if partial "seo/is-shared.html" . -}}
+  {{- $default := hugo.Sites.Default.Language.Lang -}}
+  {{- if ne .Language.Lang $default -}}
+    {{- range .AllTranslations -}}
+      {{- if eq .Language.Lang $default }}{{ $page = . }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $page -}}

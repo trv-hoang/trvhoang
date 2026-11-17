@@ -1,0 +1,5 @@
+{{- /* Open Graph wants language_TERRITORY: "en-us" → "en_US". */ -}}
+{{- $parts := split (lower .Locale) "-" -}}
+{{- $out := index $parts 0 -}}
+{{- if gt (len $parts) 1 }}{{ $out = printf "%s_%s" $out (upper (index $parts 1)) }}{{ end -}}
+{{- return $out -}}

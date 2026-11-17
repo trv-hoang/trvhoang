@@ -1,0 +1,3 @@
+{{- /* A blog post is mounted into every language with the same English text,
+  so its copies are duplicates, not translations (see [module] in hugo.toml). */ -}}
+{{- return and .IsPage (eq .Section "blog") -}}

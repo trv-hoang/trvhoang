@@ -86,7 +86,7 @@ defaultContentLanguageInSubdir = false
 
   [languages.vi]
     label = 'Tiếng Việt'
-    locale = 'vi'
+    locale = 'vi-vn'
     weight = 2
     [languages.vi.params]
       description = 'Trần Việt Hoàng, kỹ sư phần mềm ở Hà Nội, đồng sáng lập Turing Factor. Dự án, bài viết, và bản đồ những quán tôi từng ăn.'
