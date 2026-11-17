@@ -1,0 +1,56 @@
+{{- /* Share image for a page, as dict url/width/height/alt (always 1200×630 raster).
+  First match wins:
+    1. blog post with a raster coverImage in its bundle → that photo, cropped;
+    2. any other blog post → base card with the post title drawn on it;
+    3. every other page → site card with avatar, name and role.
+  Shared /vi/ copies use the English page, so both copies share one image URL. */ -}}
+{{- $page := partial "seo/canonical.html" . -}}
+{{- $name := site.Params.author.name -}}
+{{- $font := resources.Get "fonts/BeVietnamPro-SemiBold.ttf" -}}
+{{- $base := resources.Get "images/og/base.png" -}}
+{{- $white := "#fafaf9" -}}
+{{- $amber := "#f59e0b" -}}
+{{- $img := "" -}}
+{{- $alt := $name -}}
+
+{{- if partial "seo/is-shared.html" $page -}}
+  {{- $alt = $page.Title -}}
+  {{- with $page.Params.coverImage -}}
+    {{- with $page.Resources.Get (path.Base .) -}}
+      {{- if in (slice "image/jpeg" "image/png" "image/webp") .MediaType.Type -}}
+        {{- $img = .Fill "1200x630 Smart q82" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $img -}}
+    {{- /* images.Text has no wrap width: break on words at 30 characters, max 4 lines. */ -}}
+    {{- $lines := slice -}}
+    {{- $line := "" -}}
+    {{- range split $page.Title " " -}}
+      {{- $try := cond (eq $line "") . (printf "%s %s" $line .) -}}
+      {{- if and (gt (len $try) 30) (ne $line "") -}}
+        {{- $lines = $lines | append $line -}}
+        {{- $line = . -}}
+      {{- else -}}
+        {{- $line = $try -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $lines = $lines | append $line -}}
+    {{- if gt (len $lines) 4 -}}
+      {{- $lines = first 4 $lines -}}
+      {{- $lines = (first 3 $lines) | append (printf "%s…" (index $lines 3)) -}}
+    {{- end -}}
+    {{- $img = $base | images.Filter
+      (images.Text (delimit $lines "\n") (dict "font" $font "color" $white "size" 64 "linespacing" 14 "x" 96 "y" 120))
+      (images.Text $name (dict "font" $font "color" $amber "size" 30 "x" 96 "y" 520))
+    -}}
+  {{- end -}}
+{{- else -}}
+  {{- $avatar := (resources.Get site.Params.ogImage).Fill "360x360 Smart" -}}
+  {{- $img = $base | images.Filter
+    (images.Overlay $avatar 96 135)
+    (images.Text $name (dict "font" $font "color" $white "size" 64 "x" 512 "y" 220))
+    (images.Text (site.Home.Params.role | default "") (dict "font" $font "color" $amber "size" 34 "x" 512 "y" 320))
+  -}}
+{{- end -}}
+{{- return dict "url" $img.Permalink "width" $img.Width "height" $img.Height "alt" $alt -}}
