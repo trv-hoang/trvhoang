@@ -1,4 +1,4 @@
-{{- $title := cond .IsHome (printf "%s · %s" site.Params.author.name site.Title) (printf "%s · %s" .Title site.Title) -}}
+{{- $title := cond .IsHome (printf "%s · %s" site.Params.author.name .Params.role) (printf "%s · %s" .Title site.Params.author.name) -}}
 {{- $description := .Params.description | default .Summary | default site.Params.description | plainify | truncate 160 -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -14,7 +14,7 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
-<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:site_name" content="{{ site.Params.author.name }}">
 {{- with site.Params.ogImage }}
   {{- with resources.Get . }}
 <meta property="og:image" content="{{ (.Fill "600x600 jpg q80 Smart").Permalink }}">

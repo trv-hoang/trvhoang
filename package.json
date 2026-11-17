@@ -10,7 +10,8 @@
     "place:check": "node scripts/places.mjs check",
     "place:sync": "node scripts/places.mjs sync",
     "map:styles": "node scripts/map-styles.mjs",
-    "place:photo": "node scripts/places.mjs photo"
+    "place:photo": "node scripts/places.mjs photo",
+    "test": "node --test --test-concurrency=1 tests/"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",
