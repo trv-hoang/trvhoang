@@ -1,5 +1,5 @@
 {{- $title := cond .IsHome (printf "%s · %s" site.Params.author.name .Params.role) (printf "%s · %s" .Title site.Params.author.name) -}}
-{{- $description := .Params.description | default .Summary | default site.Params.description | plainify | truncate 160 -}}
+{{- $description := .Params.description | default .Summary | default site.Params.description | plainify | strings.TrimSpace | truncate 160 -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{{ $title }}</title>

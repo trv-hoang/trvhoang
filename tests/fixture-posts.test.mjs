@@ -1,10 +1,10 @@
-// Pixel checks on generated share cards for awkward titles (fixture posts from
-// the test-only theme in tests/fixtures/themes/seo-fixtures).
+// Checks on awkward posts (fixture posts from the test-only theme in
+// tests/fixtures/themes/seo-fixtures): share-card pixels and auto summaries.
 import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { buildSite, readOut, metaContent } from './helpers/site.mjs';
+import { buildSite, readOut, metaContent, jsonLd } from './helpers/site.mjs';
 import { decodePng, inkRows, bands } from './helpers/png.mjs';
 
 let dir;
@@ -30,4 +30,10 @@ test('a title over four lines is cut to four, inside the card', () => {
 test('real post card keeps two lines inside the card', () => {
   const img = card('two-agents-one-guide');
   assert.equal(titleLines(img), 2); assert.equal(rightMarginInk(img), 0);
+});
+
+test('auto-summary descriptions have no surrounding whitespace', () => {
+  const h = readOut(dir, '/blog/fixture-vi-title/');
+  assert.equal(metaContent(h, 'description'), 'Fixture for the share-card tests.');
+  assert.equal(jsonLd(h).find(n => n['@type'] === 'BlogPosting').description, 'Fixture for the share-card tests.');
 });
