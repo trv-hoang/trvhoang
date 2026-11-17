@@ -27,6 +27,10 @@
   {{- end }}
 {{- end }}
 <meta name="theme-color" content="#0c0a09">
+{{/* Favicons in static/: SVG for modern browsers, ICO (32+16) as fallback, PNG for iOS. */}}
+<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="32x32">
+<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
 
 <meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
 <meta property="og:url" content="{{ $canonical.Permalink }}">
