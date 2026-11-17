@@ -30,3 +30,9 @@ test('noindex tag pages carry no hreflang', () => {
   for (const p of ['/tags/', '/vi/tags/coffee/'])
     assert.equal(linkTags(readOut(dir, p), 'alternate').filter(l => l.hreflang).length, 0);
 });
+test('sitemap alternates skip shared posts and noindex pages, keep real translations', () => {
+  const en = readFileSync(join(dir, 'en/sitemap.xml'), 'utf8');
+  assert.doesNotMatch(en, /href="[^"]*\/vi\/blog\/[^"]+\/"/);
+  assert.doesNotMatch(en, /href="[^"]*\/tags\//);
+  assert.match(en, /hreflang="[^"]*" href="https:\/\/trvhoang\.pages\.dev\/vi\/map\/"/);
+});
