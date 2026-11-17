@@ -10,7 +10,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 export function buildSite() {
   const out = mkdtempSync(join(tmpdir(), 'trvhoang-test-'));
-  execFileSync('hugo', ['build', '--quiet', '-e', 'production', '-d', out], { cwd: root, stdio: 'pipe' });
+  try {
+    execFileSync('hugo', ['build', '--quiet', '-e', 'production', '-d', out], { cwd: root, stdio: 'pipe' });
+  } catch (err) {
+    throw new Error(`hugo build failed:\n${err.stderr}`);
+  }
   return out;
 }
 

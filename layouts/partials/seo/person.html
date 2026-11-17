@@ -1,0 +1,31 @@
+{{- /* Person node (full) for the owner. Context: the current page.
+  Data: hugo.toml (author, socials, ogImage) and the current language's home page. */ -}}
+{{- $root := hugo.Sites.Default.Home.Permalink -}}
+{{- $home := site.Home -}}
+{{- $sameAs := slice -}}
+{{- range site.Params.socials }}{{ if ne .id "email" }}{{ $sameAs = $sameAs | append .url }}{{ end }}{{ end -}}
+{{- $knows := slice -}}
+{{- range $home.Params.stack }}{{ $knows = $knows | append .items }}{{ end -}}
+{{- $alumni := slice -}}
+{{- range $home.Params.education }}{{ with .school }}{{ $alumni = $alumni | append (dict "@type" "CollegeOrUniversity" "name" .) }}{{ end }}{{ end -}}
+{{- $employers := slice -}}
+{{- range partial "seo/employers.html" . }}{{ $employers = $employers | append (dict "@id" .id) }}{{ end -}}
+{{- $image := "" -}}
+{{- with resources.Get site.Params.ogImage }}{{ $image = .Permalink }}{{ end -}}
+{{- $home_location := "" -}}
+{{- with $home.Params.location }}{{ $home_location = dict "@type" "Place" "name" . }}{{ end -}}
+{{- return partial "seo/compact.html" (dict
+  "@type" "Person"
+  "@id" (printf "%s#person" $root)
+  "name" site.Params.author.name
+  "alternateName" site.Params.author.alternateName
+  "url" $root
+  "image" $image
+  "jobTitle" $home.Params.role
+  "description" ($home.Params.description | plainify)
+  "homeLocation" $home_location
+  "sameAs" $sameAs
+  "worksFor" (cond (eq (len $employers) 1) (index $employers 0) $employers)
+  "knowsAbout" $knows
+  "alumniOf" $alumni
+) -}}

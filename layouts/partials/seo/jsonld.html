@@ -1,0 +1,37 @@
+{{- /* One JSON-LD @graph per page. Entities share stable @ids rooted at the
+  default-language home URL, so Google links them across pages. Shared /vi/
+  copies of blog posts describe the English page (see seo/canonical.html). */ -}}
+{{- $root := hugo.Sites.Default.Home.Permalink -}}
+{{- $page := partial "seo/canonical.html" . -}}
+{{- $person := dict "@id" (printf "%s#person" $root) -}}
+{{- $nodes := slice
+  (dict "@type" "WebSite" "@id" (printf "%s#website" $root) "name" site.Params.author.name "url" $root "inLanguage" site.Language.Lang "publisher" $person)
+  (partial "seo/person.html" .)
+-}}
+{{- $nodes = $nodes | append (partial "seo/organizations.html" .) -}}
+{{- if .IsHome -}}
+  {{- $nodes = $nodes | append (dict
+    "@type" "ProfilePage" "@id" (printf "%s#profilepage" .Permalink) "url" .Permalink
+    "mainEntity" $person "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")
+    "inLanguage" site.Language.Lang "isPartOf" (dict "@id" (printf "%s#website" $root))) -}}
+{{- else -}}
+  {{- if partial "seo/is-shared.html" . -}}
+    {{- $og := partial "seo/og-image.html" . -}}
+    {{- $nodes = $nodes | append (partial "seo/compact.html" (dict
+      "@type" "BlogPosting"
+      "@id" (printf "%s#article" $page.Permalink)
+      "url" $page.Permalink
+      "mainEntityOfPage" $page.Permalink
+      "headline" $page.Title
+      "description" ($page.Summary | plainify | htmlUnescape)
+      "datePublished" ($page.Date.Format "2006-01-02T15:04:05-07:00")
+      "dateModified" ($page.Lastmod.Format "2006-01-02T15:04:05-07:00")
+      "author" (merge $person (dict "name" site.Params.author.name "url" $root))
+      "image" $og.url
+      "inLanguage" $page.Language.Lang
+      "keywords" $page.Params.tags
+    )) -}}
+  {{- end -}}
+  {{- $nodes = $nodes | append (partial "seo/breadcrumbs.html" $page) -}}
+{{- end }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $nodes | jsonify | safeJS }}</script>

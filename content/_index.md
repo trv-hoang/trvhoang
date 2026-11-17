@@ -9,6 +9,9 @@ company:
   name: "Turing Factor"
   role: "Co-founder & Software Engineer"
   period: "Jul 2026 – now"
+  # for structured data (schema.org foundingDate / areaServed)
+  founded: "2026-07"
+  areaServed: "VN"
   about: "A small software company I started with Hieu Tran and Dinh Nguyen. We sell management software to Vietnamese small and medium businesses, all built on one shared Cloudflare platform. I'm a core contributor to that platform, I lead Turing OMS, and I present our products to customers."
   products: ["turing-hris", "turing-oms", "fountainhead"]
   also: "We also offer asset management, a CMS and an LMS."

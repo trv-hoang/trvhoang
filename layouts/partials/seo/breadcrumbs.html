@@ -1,0 +1,14 @@
+{{- /* BreadcrumbList for a non-home page: Home › section list › page.
+  The middle item is skipped when the parent is the home page. */ -}}
+{{- /* The home crumb must be in the page's own language: a shared /vi/ post
+  arrives here as its English page, while site.Home is the Vietnamese home. */ -}}
+{{- $home := site.Home -}}
+{{- range site.Home.AllTranslations }}{{ if eq .Language.Lang $.Language.Lang }}{{ $home = . }}{{ end }}{{ end -}}
+{{- $crumbs := slice $home -}}
+{{- with .Parent }}{{ if not .IsHome }}{{ $crumbs = $crumbs | append . }}{{ end }}{{ end -}}
+{{- $crumbs = $crumbs | append . -}}
+{{- $items := slice -}}
+{{- range $i, $p := $crumbs -}}
+  {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "name" $p.LinkTitle "item" $p.Permalink) -}}
+{{- end -}}
+{{- return dict "@type" "BreadcrumbList" "itemListElement" $items -}}

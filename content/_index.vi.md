@@ -7,6 +7,9 @@ company:
   name: "Turing Factor"
   role: "Đồng sáng lập & kỹ sư phần mềm"
   period: "07/2026 – nay"
+  # for structured data (schema.org foundingDate / areaServed)
+  founded: "2026-07"
+  areaServed: "VN"
   about: "Công ty phần mềm nhỏ do tôi cùng Hieu Tran và Dinh Nguyen thành lập. Chúng tôi bán phần mềm quản lý cho doanh nghiệp vừa và nhỏ tại Việt Nam, tất cả xây dựng trên cùng một nền tảng chạy trên Cloudflare. Tôi đóng góp chính cho nền tảng này, phụ trách sản phẩm Turing OMS và trực tiếp giới thiệu sản phẩm đến khách hàng."
   products: ["turing-hris", "turing-oms", "fountainhead"]
   also: "Ngoài ra, chúng tôi còn cung cấp phần mềm quản lý tài sản, quản lý nội dung (CMS) và quản lý đào tạo (LMS)."

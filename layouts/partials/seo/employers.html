@@ -1,0 +1,12 @@
+{{- /* Current employers: work pages with a role still running ("Present" / "nay").
+  Returns a slice of dict id/name. */ -}}
+{{- $root := hugo.Sites.Default.Home.Permalink -}}
+{{- $out := slice -}}
+{{- range where site.RegularPages "Section" "work" -}}
+  {{- $current := false -}}
+  {{- range .Params.roles }}{{ if findRE `(?i)(present|nay)\s*$` .period }}{{ $current = true }}{{ end }}{{ end -}}
+  {{- if and $current .Params.company -}}
+    {{- $out = $out | append (dict "id" (printf "%s#%s" $root (urlize .Params.company)) "name" .Params.company) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

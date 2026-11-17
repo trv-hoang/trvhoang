@@ -18,6 +18,8 @@ enableRobotsTXT = true
 
   [params.author]
     name = 'Trần Việt Hoàng'
+    # name without diacritics, for structured data (schema.org alternateName)
+    alternateName = 'Tran Viet Hoang'
     email = 'trvhoang.net@gmail.com'
 
   # One list of profiles, used by the footer, the About page and the Contact page.

@@ -1,0 +1,6 @@
+{{- /* Copy of a dict without empty values, so no node carries "" or []. */ -}}
+{{- $out := dict -}}
+{{- range $k, $v := . -}}
+  {{- if $v }}{{ $out = merge $out (dict $k $v) }}{{ end -}}
+{{- end -}}
+{{- return $out -}}
