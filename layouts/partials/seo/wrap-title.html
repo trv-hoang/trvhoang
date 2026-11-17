@@ -1,0 +1,47 @@
+{{- /* Breaks a title into at most 4 lines that fit the share card, as a slice.
+  images.Text would otherwise wrap at the image edge on its own, adding lines
+  past the bottom of the title block. */ -}}
+{{- $max := 1008 -}}
+{{- $maxLines := 4 -}}
+{{- /* Words wider than a line are cut into pieces that fit. */ -}}
+{{- $words := slice -}}
+{{- range split . " " -}}
+  {{- if le (partial "seo/text-width.html" .) $max -}}
+    {{- $words = $words | append . -}}
+  {{- else -}}
+    {{- $piece := "" -}}
+    {{- range split . "" -}}
+      {{- if gt (partial "seo/text-width.html" (print $piece .)) $max -}}
+        {{- $words = $words | append $piece -}}
+        {{- $piece = "" -}}
+      {{- end -}}
+      {{- $piece = print $piece . -}}
+    {{- end -}}
+    {{- $words = $words | append $piece -}}
+  {{- end -}}
+{{- end -}}
+{{- $lines := slice -}}
+{{- $line := "" -}}
+{{- range $words -}}
+  {{- if eq . "" }}{{ continue }}{{ end -}}
+  {{- $try := cond (eq $line "") . (printf "%s %s" $line .) -}}
+  {{- if and (gt (partial "seo/text-width.html" $try) $max) (ne $line "") -}}
+    {{- $lines = $lines | append $line -}}
+    {{- $line = . -}}
+  {{- else -}}
+    {{- $line = $try -}}
+  {{- end -}}
+{{- end -}}
+{{- $lines = $lines | append $line -}}
+{{- if gt (len $lines) $maxLines -}}
+  {{- /* Drop characters from the last kept line until it fits with "…". */ -}}
+  {{- $chars := split (index $lines (sub $maxLines 1)) "" -}}
+  {{- $last := delimit $chars "" -}}
+  {{- range seq (len $chars) -}}
+    {{- if le (partial "seo/text-width.html" (print $last "…")) $max }}{{ break }}{{ end -}}
+    {{- $chars = first (sub (len $chars) 1) $chars -}}
+    {{- $last = delimit $chars "" | strings.TrimSpace -}}
+  {{- end -}}
+  {{- $lines = (first (sub $maxLines 1) $lines) | append (print $last "…") -}}
+{{- end -}}
+{{- return $lines -}}

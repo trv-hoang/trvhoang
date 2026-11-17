@@ -23,23 +23,7 @@
     {{- end -}}
   {{- end -}}
   {{- if not $img -}}
-    {{- /* images.Text has no wrap width: break on words at 30 characters, max 4 lines. */ -}}
-    {{- $lines := slice -}}
-    {{- $line := "" -}}
-    {{- range split $page.Title " " -}}
-      {{- $try := cond (eq $line "") . (printf "%s %s" $line .) -}}
-      {{- if and (gt (len $try) 30) (ne $line "") -}}
-        {{- $lines = $lines | append $line -}}
-        {{- $line = . -}}
-      {{- else -}}
-        {{- $line = $try -}}
-      {{- end -}}
-    {{- end -}}
-    {{- $lines = $lines | append $line -}}
-    {{- if gt (len $lines) 4 -}}
-      {{- $lines = first 4 $lines -}}
-      {{- $lines = (first 3 $lines) | append (printf "%s…" (index $lines 3)) -}}
-    {{- end -}}
+    {{- $lines := partial "seo/wrap-title.html" $page.Title -}}
     {{- $img = $base | images.Filter
       (images.Text (delimit $lines "\n") (dict "font" $font "color" $white "size" 64 "linespacing" 14 "x" 96 "y" 120))
       (images.Text $name (dict "font" $font "color" $amber "size" 30 "x" 96 "y" 520))

@@ -1,0 +1,17 @@
+{{- /* Estimated width in px of a string in Be Vietnam Pro SemiBold at size 64.
+  ASCII widths were measured with ImageMagick from assets/fonts; any other
+  character (e.g. Vietnamese letters with diacritics) gets a safe upper bound.
+  Counts characters, not bytes. */ -}}
+{{- $table := dict
+  "a" 42 "b" 42 "c" 40 "d" 42 "e" 39 "f" 26 "g" 42 "h" 38 "i" 18 "j" 27 "k" 37 "l" 18 "m" 57
+  "n" 38 "o" 42 "p" 42 "q" 42 "r" 27 "s" 34 "t" 28 "u" 37 "v" 38 "w" 56 "x" 38 "y" 38 "z" 33
+  "A" 49 "B" 45 "C" 50 "D" 48 "E" 41 "F" 41 "G" 50 "H" 46 "I" 18 "J" 31 "K" 45 "L" 41 "M" 56
+  "N" 48 "O" 53 "P" 43 "Q" 53 "R" 45 "S" 42 "T" 43 "U" 47 "V" 47 "W" 67 "X" 48 "Y" 45 "Z" 43
+  "0" 44 "1" 27 "2" 42 "3" 43 "4" 46 "5" 43 "6" 44 "7" 38 "8" 42 "9" 44
+  " " 15 "." 20 "," 21 ":" 20 ";" 21 "'" 13 "!" 20 "?" 39 "-" 39 "(" 29 ")" 29 "&" 48 "/" 34 "\"" 23 "’" 15
+-}}
+{{- $w := 0 -}}
+{{- range split . "" -}}
+  {{- $w = add $w (index $table . | default (cond (ne . (lower .)) 53 44)) -}}
+{{- end -}}
+{{- return $w -}}
